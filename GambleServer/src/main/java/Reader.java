@@ -24,6 +24,8 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
             Buff.compact();
             if(data != null){
 
+                req.DataReadComplete(data);
+
             } else {// if data incomplete, read more
                 if(readTimes < 4) {//if read too many times
                     req.ch.read(Buff, 10, TimeUnit.SECONDS, ch, this);
@@ -40,7 +42,16 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
 
     @Override
     public void failed(Throwable e, AsynchronousSocketChannel ch) {
+        // if Client Closed, may cause this err
         req.Close();
         e.printStackTrace();
+    }
+
+    /**
+     * Reset buffer and read counter
+     */
+    public void Reset(){
+        Buff.clear();
+        readTimes = 0;
     }
 }

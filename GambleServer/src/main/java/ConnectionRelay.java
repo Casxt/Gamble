@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -11,13 +12,14 @@ public class ConnectionRelay {
     // LinkedBlockingQueue are Thread safe, see:
     // https://stackoverflow.com/questions/2695426/are-linkedblockingqueues-insert-and-remove-methods-thread-safe
     LinkedBlockingQueue<Request> ReqQueue;
+    //ConcurrentHashMap<String>;
     Accepter accepter;
     public ConnectionRelay() throws IOException {
         // more detail of ThreadPool please see
         // https://www.cnblogs.com/richaaaard/p/6599184.html
         // and
         // https://www.ibm.com/developerworks/cn/java/j-nio2-1/
-        group = AsynchronousChannelGroup.withFixedThreadPool(10, Executors.defaultThreadFactory());
+        group = AsynchronousChannelGroup.withFixedThreadPool(2, Executors.defaultThreadFactory());
         accepter = new Accepter();
         ReqQueue = new LinkedBlockingQueue<>();
     }
