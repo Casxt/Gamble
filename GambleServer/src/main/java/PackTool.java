@@ -81,6 +81,25 @@ public class PackTool {
         }
     }
 
+    /**
+     * DataConstructor will Constructor data struct
+     * @param data is data wait to be pack
+     * @return the buffer wait to be send
+     */
+    public ByteBuffer DataConstructor(byte[] data){
+        byte[] head = {'G','r','a','m','b','l','e'};
+        CRC32 crc32 = new CRC32();
+        crc32.update(data);
+
+        ByteBuffer b = ByteBuffer.allocate((head.length + 4 + data.length + 8));
+        b.put(head);
+        b.putInt(data.length);
+        b.put(data);
+        b.putLong(crc32.getValue());
+        b.flip();
+        return b;
+    }
+
     private boolean isMatch(){
         for (int i = 0; i < len; i ++) {
             // the match will begin from the last byte and end with the first byte

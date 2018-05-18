@@ -25,8 +25,14 @@ public class RequestProcessor implements Runnable  {
                         break;
 
                     default:
+                        res = new JSONObject();
+                        res.put("State","Failed")
+                                .put("Msg", "Invalid Action");
                         break;
                 }
+
+                req.Response(res);
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

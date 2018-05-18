@@ -12,6 +12,7 @@ public class Request {
     AsynchronousSocketChannel ch;
     private LinkedBlockingQueue<Request> ReqQueue;
     Reader reader;
+    Writer writer;
     JSONObject body;
 
     public Request(LinkedBlockingQueue<Request> ReqQueue){
@@ -19,6 +20,11 @@ public class Request {
         ch = null;
         reader = null;
         body = null;
+        writer = new Writer(this);
+    }
+
+    public void Response(JSONObject res){
+        writer.WriteOnce(res.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
     }
 
     /**
