@@ -11,14 +11,14 @@ import java.util.concurrent.TimeUnit;
 public class Request {
     AsynchronousSocketChannel ch;
     private LinkedBlockingQueue<Request> ReqQueue;
-    Reader reader;
-    Writer writer;
+    private Reader reader;
+    private Writer writer;
     JSONObject body;
 
     public Request(LinkedBlockingQueue<Request> ReqQueue){
         this.ReqQueue = ReqQueue;
         ch = null;
-        reader = null;
+        reader = new Reader(this);
         body = null;
         writer = new Writer(this);
     }
@@ -45,15 +45,27 @@ public class Request {
      * @param ch are socket bound to this
      */
     public void GetReq(AsynchronousSocketChannel ch){
-        // Set Reader
-        reader = new Reader(this);
         // Set Socket
         this.ch = ch;
         // Set callback, after this, the reader will handle
         // until the ch until a complete req are recevie
-        this.ch.read(reader.Buff, 10, TimeUnit.SECONDS, this.ch,reader);
+        this.ch.read(reader.Buff, 60, TimeUnit.SECONDS, this.ch,reader);
     }
 
+    /**
+     * call KeepOpen, the socket will not close after response
+     * can use to reuse connection
+     */
+    public void KeepOpen(){
+        writer.keepOpen = true;
+    }
+
+    /**
+     * call CloseAfterSend, the socket will close after response
+     */
+    public void CloseAfterSend(){
+        writer.keepOpen = false;
+    }
     /**
      * Close the channel
      */

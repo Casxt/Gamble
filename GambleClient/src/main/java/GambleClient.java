@@ -1,8 +1,11 @@
-import jdk.nashorn.api.scripting.JSObject;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -30,6 +33,45 @@ public class GambleClient {
 
     public static void Login(){
         System.out.println("连接成功，请输入用户名：");
+        Scanner sc = new Scanner(System.in);
+        String Name = sc.nextLine();
+        JSONObject req = new JSONObject();
+
+        req.put("Action", "Login")
+                .put("Name", Name);
+
+
+
+        try {
+            PackTool packer = new PackTool(new byte[] {'G','r','a','m','b','l','e'});
+            ByteBuffer buff = packer.DataConstructor(req.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            Future future = serverCh.write(buff);
+            future.get();
+
+            buff = ByteBuffer.allocate(2048);
+            future = serverCh.read(buff);
+            future.get();
+            buff.flip();
+            String t = new String(buff.array());
+            System.out.println(t);
+            byte[] data = packer.DataDeconstructor(buff);
+            if (data == null){
+                System.out.println("连接失败，请重启程序：");
+                return;
+            }
+
+            String s = new String(data, java.nio.charset.StandardCharsets.UTF_8);
+            JSONObject res = new JSONObject(s);
+
+            if(res.getString("State").equals("Success")){
+                System.out.println("您有100个筹码，请下注：");
+            } else {
+                System.out.println("用户名已经存在，请更换一个新名字：");
+            }
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
     }
 }

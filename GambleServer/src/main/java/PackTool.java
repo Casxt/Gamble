@@ -10,11 +10,14 @@ public class PackTool {
 
     public PackTool(byte[] head){
         len = head.length;
-        this.head = Arrays.copyOf(head, head.length);
-        ringBuf = new byte[head.length];
+        this.head = head;
+        ringBuf = new byte[len];
         Reset();
     }
-
+    public void Reset(){
+        count = 0;
+    }
+    
     public boolean MatchHead(ByteBuffer buffer){
         //init the sum of count
         count = len - 1;
@@ -87,7 +90,7 @@ public class PackTool {
      * @return the buffer wait to be send
      */
     public ByteBuffer DataConstructor(byte[] data){
-        byte[] head = {'G','r','a','m','b','l','e'};
+        //byte[] head = {'G','r','a','m','b','l','e'};
         CRC32 crc32 = new CRC32();
         crc32.update(data);
 
@@ -100,6 +103,12 @@ public class PackTool {
         return b;
     }
 
+    public ByteBuffer DataConstructor(ByteBuffer buffer){
+        byte[] data = new byte[buffer.remaining()];
+        buffer.get(data);
+        return DataConstructor(data);
+    }
+
     private boolean isMatch(){
         for (int i = 0; i < len; i ++) {
             // the match will begin from the last byte and end with the first byte
@@ -110,7 +119,5 @@ public class PackTool {
         return true;
     }
 
-    public void Reset(){
-        count = 0;
-    }
+
 }

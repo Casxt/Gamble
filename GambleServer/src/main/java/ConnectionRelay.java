@@ -8,7 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class ConnectionRelay {
     AsynchronousChannelGroup group;
-    AsynchronousServerSocketChannel server;
+    AsynchronousServerSocketChannel Server;
     // LinkedBlockingQueue are Thread safe, see:
     // https://stackoverflow.com/questions/2695426/are-linkedblockingqueues-insert-and-remove-methods-thread-safe
     LinkedBlockingQueue<Request> ReqQueue;
@@ -23,9 +23,9 @@ public class ConnectionRelay {
         // and
         // https://www.ibm.com/developerworks/cn/java/j-nio2-1/
         group = AsynchronousChannelGroup.withFixedThreadPool(2, Executors.defaultThreadFactory());
-        accepter = new Accepter();
+        accepter = null;
         ReqQueue = new LinkedBlockingQueue<>();
-
+        Clients = new ConcurrentHashMap<>();
         requestProcessors = new RequestProcessor[1];
         for(int i = 0; i<requestProcessors.length; i++){
             requestProcessors[i] = new RequestProcessor(ReqQueue, Clients);
@@ -34,13 +34,15 @@ public class ConnectionRelay {
     }
 
     public void Sratr(String host, int port) throws IOException {
-        server = AsynchronousServerSocketChannel.open(group);
-        server.bind(new InetSocketAddress(host, port));
+        Server = AsynchronousServerSocketChannel.open(group);
+        Server.bind(new InetSocketAddress(host, port));
+
+        accepter = new Accepter(Server, ReqQueue);
 
         for (RequestProcessor requestProcessor : requestProcessors) {
             requestProcessor.start();
         }
-        server.accept(new Request(ReqQueue),accepter);
+        Server.accept(new Request(ReqQueue), accepter);
     }
 
 }

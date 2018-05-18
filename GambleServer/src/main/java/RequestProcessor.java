@@ -55,6 +55,7 @@ public class RequestProcessor implements Runnable  {
             res.put("State", "Success")
                     .put("Msg", "User %s Login Successful")
                     .put("Token", c.Token);
+            return res;
         }
         res.put("State", "Failed")
                 .put("Msg", "User Name Already Exist");
