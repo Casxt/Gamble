@@ -9,15 +9,25 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
 
     public Writer(Request req) {
         this.req = req;
+        buffer = null;
     }
 
-    public void Write(byte[] data) {
+    /**
+     * Write the Data to buffer
+     * only have one chance, don't call it more than once!
+     * @param data
+     */
+    public void Response(byte[] data) {
+        assert buffer == null;
         buffer = DataConstructor(data);
-        if(!isSending){
-            continueSending();
-        }
+        req.ch.write(buffer, buffer, this);
     }
 
+    /**
+     * DataConstructor will Constructor data struct
+     * @param data is data wait to be pack
+     * @return the buffer wait to be send
+     */
     private ByteBuffer DataConstructor(byte[] data){
         byte[] head = {'G','r','a','m','b','l','e'};
         CRC32 crc32 = new CRC32();
@@ -30,11 +40,6 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
         b.putLong(crc32.getValue());
         b.flip();
         return b;
-    }
-
-    private void continueSending(){
-        //Starting a new sending progress
-            req.ch.write(buffer, buffer, this);
     }
 
     @Override
