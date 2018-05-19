@@ -16,10 +16,11 @@ public class Client {
     Reader reader;
     String Name;
     String Token;
-
+    int Chips;
     public Client(AsynchronousSocketChannel ch) {
         this.ch = ch;
         reader = new Reader(this);
+        Chips = 100;
     }
 
     public void Start() {
@@ -28,6 +29,10 @@ public class Client {
 
     public void Quite() {
         System.out.println("您已下线。");
+        Close();
+    }
+
+    public void Close(){
         try {
             ch.close();
         } catch (IOException e) {

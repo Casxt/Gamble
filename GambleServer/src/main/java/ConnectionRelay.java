@@ -43,7 +43,7 @@ public class ConnectionRelay {
         accepter = new Accepter(Server, ReqQueue);
 
         for (RequestProcessor requestProcessor : requestProcessors) {
-            requestProcessor.start();
+            requestProcessor.Start();
         }
         Server.accept(new Request(ReqQueue), accepter);
     }

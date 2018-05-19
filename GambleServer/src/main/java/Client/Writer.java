@@ -6,8 +6,11 @@ import java.nio.ByteBuffer;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class Writer implements CompletionHandler<Integer, ByteBuffer> {
+    private static String name = Reader.class.getName();
+    private static Logger log = Logger.getLogger(name);
     private Client client;
     LinkedBlockingQueue<ByteBuffer> buffers;
     private PackTool packer;
@@ -78,6 +81,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
                 }
             }
         } else {
+            log.info("client closed");
             client.Close();
         }
 
@@ -85,7 +89,8 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
 
     @Override
     public void failed(Throwable e, ByteBuffer buffer) {
+        log.info("client closed");
         client.Close();
-        e.printStackTrace();
+        //e.printStackTrace();
     }
 }

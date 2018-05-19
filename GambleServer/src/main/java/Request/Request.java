@@ -55,19 +55,13 @@ public class Request {
     }
 
     /**
-     * call KeepOpen, the socket will not close after response
+     * if KeepOpen is true, the socket will not close after response
      * can use to reuse connection
      */
-    public void KeepOpen(){
-        writer.keepOpen = true;
+    public void KeepOpen(boolean keepOpen){
+        writer.keepOpen = keepOpen;
     }
 
-    /**
-     * call CloseAfterSend, the socket will close after response
-     */
-    public void CloseAfterSend(){
-        writer.keepOpen = false;
-    }
     /**
      * Close the channel
      */

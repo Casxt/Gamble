@@ -51,4 +51,18 @@ public class MsgTool {
             client.Send(JsonMsg);
         }
     }
+
+    public void BoardcastLastMsg(String Action, String Msg, String ...Args) {
+        JSONObject JsonMsg = new JSONObject();
+        JsonMsg.put("Action", Action)
+                .put("Msg", Msg);
+        for (int i = 0; i < Args.length; i+=2) {
+            JsonMsg.put(Args[i], Args[i+1]);
+        }
+
+        for (Client client : Clients.values()) {
+            client.KeepOpen(false);
+            client.Send(JsonMsg);
+        }
+    }
 }

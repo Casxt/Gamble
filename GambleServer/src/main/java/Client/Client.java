@@ -8,13 +8,13 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Client {
-    String Name;
+    public String Name;
     AsynchronousSocketChannel ch;
     public String Token;
     ConcurrentHashMap<String, Client> Clients;
     Writer writer;
     Reader reader;
-    int Chips;
+    public int  Chips;
 
     public Client(String Name, AsynchronousSocketChannel ch, ConcurrentHashMap<String, Client> Clients){
         Chips = 100;
@@ -46,5 +46,9 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void KeepOpen(boolean keepOpen) {
+        writer.keepOpen = keepOpen;
     }
 }

@@ -13,14 +13,29 @@ import java.util.concurrent.Future;
 public class GambleClient {
     static AsynchronousSocketChannel serverCh;
     static Client client;
+    private static CommandParser commandParser = new CommandParser();
     public static void main(String[] args) {
+
         System.out.println("Connecting...");
+
         Connect();
         client = new Client(serverCh);
         System.out.println("连接成功，请输入用户名：");
-        while (!client.Login()){ }
+
+        while (!client.Login()){
+            client.Close();
+            Connect();
+            client = new Client(serverCh);
+        }
         client.Start();
+
         System.out.println("您有100个筹码，请下注：");
+        
+        Scanner sc = new Scanner(System.in);
+
+        while (true){
+            commandParser.Parase(sc.nextLine());
+        }
 
     }
 
