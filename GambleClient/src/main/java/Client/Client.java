@@ -14,7 +14,9 @@ import java.util.concurrent.TimeUnit;
 public class Client {
     AsynchronousSocketChannel ch;
     Reader reader;
-    public String Name;
+    String Name;
+    String Token;
+
     public Client(AsynchronousSocketChannel ch) {
         this.ch = ch;
         reader = new Reader(this);
@@ -64,6 +66,7 @@ public class Client {
             JSONObject res = new JSONObject(s);
 
             if(res.getString("State").equals("Success")){
+                Token = res.getString("Token");
                 return true;
             } else {
                 System.out.println("用户名已经存在，请更换一个新名字：");

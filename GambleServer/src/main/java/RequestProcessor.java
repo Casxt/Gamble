@@ -9,9 +9,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class RequestProcessor implements Runnable  {
     private Thread thread;
     private LinkedBlockingQueue<Request> ReqQueue;
-    ConcurrentHashMap<String, Client> Clients;
-    MsgTool msgTool;
-    public RequestProcessor(LinkedBlockingQueue<Request> ReqQueue, ConcurrentHashMap<String, Client> Clients){
+    private ConcurrentHashMap<String, Client> Clients;
+    private MsgTool msgTool;
+    RequestProcessor(LinkedBlockingQueue<Request> ReqQueue, ConcurrentHashMap<String, Client> Clients){
         this.ReqQueue = ReqQueue;
         this.Clients = Clients;
         msgTool = new MsgTool(Clients);
