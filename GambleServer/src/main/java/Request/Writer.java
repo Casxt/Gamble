@@ -4,7 +4,7 @@ import PackTool.PackTool;
 import java.nio.ByteBuffer;
 import java.nio.channels.CompletionHandler;
 
-public class RequestWriter implements CompletionHandler<Integer, ByteBuffer> {
+public class Writer implements CompletionHandler<Integer, ByteBuffer> {
     private Request req;
     private ByteBuffer buffer;
     private PackTool packer;
@@ -16,7 +16,7 @@ public class RequestWriter implements CompletionHandler<Integer, ByteBuffer> {
      */
     public boolean keepOpen = false;
 
-    public RequestWriter(Request req) {
+    public Writer(Request req) {
         this.req = req;
         buffer = ByteBuffer.allocate(2048);
         packer = new PackTool(new byte[] {'G','r','a','m','b','l','e'});

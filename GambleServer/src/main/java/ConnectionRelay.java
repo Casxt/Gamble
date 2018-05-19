@@ -30,7 +30,7 @@ public class ConnectionRelay {
         ReqQueue = new LinkedBlockingQueue<>();
         Clients = new ConcurrentHashMap<>();
         requestProcessors = new RequestProcessor[1];
-        for(int i = 0; i<requestProcessors.length; i++){
+        for (int i = 0; i < requestProcessors.length; i++) {
             requestProcessors[i] = new RequestProcessor(ReqQueue, Clients);
         }
 

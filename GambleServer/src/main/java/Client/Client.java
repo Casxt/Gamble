@@ -12,8 +12,8 @@ public class Client {
     AsynchronousSocketChannel ch;
     public String Token;
     ConcurrentHashMap<String, Client> Clients;
-    ClientWriter writer;
-    ClientReader reader;
+    Writer writer;
+    Reader reader;
     int Chips;
 
     public Client(String Name, AsynchronousSocketChannel ch, ConcurrentHashMap<String, Client> Clients){
@@ -23,8 +23,8 @@ public class Client {
         this.ch = ch;
         this.Name = Name;
         this.Clients = Clients;
-        reader = new ClientReader(this);
-        writer = new ClientWriter(this);
+        reader = new Reader(this);
+        writer = new Writer(this);
     }
 
     /**

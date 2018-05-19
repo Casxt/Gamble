@@ -7,7 +7,7 @@ import java.nio.channels.CompletionHandler;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class ClientWriter implements CompletionHandler<Integer, ByteBuffer> {
+public class Writer implements CompletionHandler<Integer, ByteBuffer> {
     private Client client;
     LinkedBlockingQueue<ByteBuffer> buffers;
     private ByteBuffer buffer;
@@ -28,20 +28,21 @@ public class ClientWriter implements CompletionHandler<Integer, ByteBuffer> {
      */
     private int sendTimes = 0;
 
-    public ClientWriter(Client client) {
+    public Writer(Client client) {
         this.client = client;
         buffer = ByteBuffer.allocate(2048);
-        packer = new PackTool(new byte[] {'G','r','a','m','b','l','e'});
+        packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
     }
 
     /**
      * Write Data into buffer list,
      * data will be send as soon as possible
+     *
      * @param data waite to be send
      */
     public boolean Write(byte[] data) {
-        boolean res =  buffers.offer(ByteBuffer.wrap(data));
-        if(!isSending && !buffers.isEmpty()){
+        boolean res = buffers.offer(ByteBuffer.wrap(data));
+        if (!isSending && !buffers.isEmpty()) {
             continueSend();
         }
         return res;
@@ -50,30 +51,30 @@ public class ClientWriter implements CompletionHandler<Integer, ByteBuffer> {
     /**
      * Send the data in buffer which written by Write()
      */
-    private void continueSend(){
+    private void continueSend() {
         isSending = true;
         //poll is a nonblocking method
         ByteBuffer buff = buffers.poll();
         sendTimes++;
-        client.ch.write(buff,  10, TimeUnit.SECONDS, buff, this);
+        client.ch.write(buff, 10, TimeUnit.SECONDS, buff, this);
     }
 
     @Override
     public void completed(Integer result, ByteBuffer buffer) {
-        if(result!=-1) {
-            if (buffer.hasRemaining()){
+        if (result != -1) {
+            if (buffer.hasRemaining()) {
                 sendTimes++;
-                if(sendTimes < 4){
+                if (sendTimes < 4) {
                     client.ch.write(buffer, 10, TimeUnit.SECONDS, buffer, this);
-                }else{//Already send too many times
+                } else {//Already send too many times
                     client.Close();
                 }
             } else {
                 sendTimes = 0;
                 isSending = false;
-                if(!buffers.isEmpty()){
+                if (!buffers.isEmpty()) {
                     continueSend();
-                } else if(!keepOpen){
+                } else if (!keepOpen) {
                     client.Close();
                 }
             }

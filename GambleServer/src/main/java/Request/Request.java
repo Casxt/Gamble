@@ -13,16 +13,16 @@ import java.util.concurrent.TimeUnit;
 public class Request {
     public AsynchronousSocketChannel ch;
     private LinkedBlockingQueue<Request> ReqQueue;
-    private RequestReader reader;
-    private RequestWriter writer;
+    private Reader reader;
+    private Writer writer;
     public JSONObject body;
 
     public Request(LinkedBlockingQueue<Request> ReqQueue){
         this.ReqQueue = ReqQueue;
         ch = null;
-        reader = new RequestReader(this);
+        reader = new Reader(this);
         body = null;
-        writer = new RequestWriter(this);
+        writer = new Writer(this);
     }
 
     public void Response(JSONObject res){

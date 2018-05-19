@@ -6,10 +6,10 @@ import java.nio.channels.CompletionHandler;
 /**
  * This class is mainly use to detect the err or client
  */
-public class ClientReader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
+public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
     private Client client;
 
-    public ClientReader(Client client) {
+    public Reader(Client client) {
         this.client = client;
     }
 

@@ -1,4 +1,5 @@
 import Client.Client;
+import Client.MsgTool;
 import Request.Request;
 import org.json.JSONObject;
 
@@ -9,9 +10,11 @@ public class RequestProcessor implements Runnable  {
     private Thread thread;
     private LinkedBlockingQueue<Request> ReqQueue;
     ConcurrentHashMap<String, Client> Clients;
+    MsgTool msgTool;
     public RequestProcessor(LinkedBlockingQueue<Request> ReqQueue, ConcurrentHashMap<String, Client> Clients){
         this.ReqQueue = ReqQueue;
         this.Clients = Clients;
+        msgTool = new MsgTool(Clients);
     }
 
     public void run(){
@@ -53,9 +56,12 @@ public class RequestProcessor implements Runnable  {
         if (!Clients.containsKey(name)){
             Client c = new Client(name, req.ch, Clients);
             Clients.put(name, c);
+
+            msgTool.Boardcast("LoginNotify", String.format("User %s Login",name), "Name", name);
+
             req.KeepOpen();
             res.put("State", "Success")
-                    .put("Msg", "User %s Login Successful")
+                    .put("Msg", String.format("User %s Login Successful",name))
                     .put("Token", c.Token);
             return res;
         }

@@ -7,12 +7,12 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.TimeUnit;
 
-public class RequestReader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
+public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
     private Request req;
     ByteBuffer Buff;
     private PackTool depacker;
     private int readTimes;
-    public RequestReader(Request req) {
+    public Reader(Request req) {
         this.req = req;
         Buff = ByteBuffer.allocate(2048);
         depacker = new PackTool(new byte[] {'G','r','a','m','b','l','e'});
