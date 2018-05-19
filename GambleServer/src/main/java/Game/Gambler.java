@@ -3,13 +3,9 @@ package Game;
 import Client.Client;
 import org.json.JSONObject;
 
-enum BetType {
-    Big, Small
-}
-
-public class Gambler {
+class Gambler {
     Client client;
-    int chips = 0;
+    private int chips;
     BetType betType;
 
     Gambler(Client client, int chips, BetType betType) {
@@ -18,7 +14,7 @@ public class Gambler {
         this.betType = betType;
     }
 
-    public int Win() {
+    int Win() {
         //因为之前没有扣除，所以这里只加一倍
         client.Chips += chips;
         JSONObject res = new JSONObject()
@@ -31,7 +27,7 @@ public class Gambler {
         return chips;
     }
 
-    public int Lose() {
+    int Lose() {
         client.Chips -= chips;
         JSONObject res = new JSONObject()
                 .put("Action", "GambleResultNotify")

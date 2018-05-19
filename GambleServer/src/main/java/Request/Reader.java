@@ -9,29 +9,27 @@ import java.util.concurrent.TimeUnit;
 
 public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
     private Request req;
-    ByteBuffer Buff;
-    private PackTool depacker;
-    private int readTimes;
-    public Reader(Request req) {
+    ByteBuffer Buff = ByteBuffer.allocate(2048);
+    private PackTool depacker = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
+    private int readTimes = 0;
+
+    Reader(Request req) {
         this.req = req;
-        Buff = ByteBuffer.allocate(2048);
-        depacker = new PackTool(new byte[] {'G','r','a','m','b','l','e'});
-        readTimes = 0;
     }
 
     @Override
     public void completed(Integer result, AsynchronousSocketChannel ch) {
         readTimes++;
-        if (result != -1){
+        if (result != -1) {
             Buff.flip();
             byte[] data = depacker.DataDeconstructor(Buff);
             Buff.compact();
-            if(data != null){
+            if (data != null) {
 
                 req.DataReadComplete(data);
 
             } else {// if data incomplete, read more
-                if(readTimes < 4) {//if read too many times
+                if (readTimes < 4) {//if read too many times
                     ch.read(Buff, 10, TimeUnit.SECONDS, ch, this);
                 } else {
                     req.Close();
@@ -46,15 +44,18 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
 
     @Override
     public void failed(Throwable e, AsynchronousSocketChannel ch) {
-        // if Client.Client Closed, may cause this err
-        req.Close();
-        e.printStackTrace();
+        if (e instanceof java.nio.channels.InterruptedByTimeoutException) {
+            req.Close();
+        } else {
+            req.Close();
+            e.printStackTrace();
+        }
     }
 
     /**
      * Reset buffer and read counter
      */
-    public void Reset(){
+    void Reset() {
         Buff.clear();
         readTimes = 0;
     }

@@ -11,7 +11,16 @@ public class MsgTool {
         this.Clients = Clients;
     }
 
-    public void BoardcastExcept(String name, String Action, String Msg, String... Args) {
+    /**
+     * Send Msg Except the specific user
+     *
+     * @param name   of specific user
+     * @param Action Action field
+     * @param Msg    Msg field
+     * @param Args   More Args, A pair of Key-Value
+     */
+    public void BroadcastExcept(String name, String Action, String Msg, String... Args) {
+        assert Args.length % 2 == 0;
         JSONObject JsonMsg = new JSONObject();
         JsonMsg.put("Action", Action)
                 .put("Msg", Msg);
@@ -25,7 +34,7 @@ public class MsgTool {
         }
     }
 
-    public void BoardcastExcept(String name, JSONObject JsonMsg) {
+    public void BroadcastExcept(String name, JSONObject JsonMsg) {
         for (Client client : Clients.values()) {
             if (!client.Name.equals(name)) {
                 client.Send(JsonMsg);
@@ -33,7 +42,14 @@ public class MsgTool {
         }
     }
 
-    public void Boardcast(String Action, String Msg, String... Args) {
+    /**
+     * Send Msg to all User
+     *
+     * @param Action Action field
+     * @param Msg    Msg field
+     * @param Args   More Args, A pair of Key-Value
+     */
+    public void Broadcast(String Action, String Msg, String... Args) {
         JSONObject JsonMsg = new JSONObject();
         JsonMsg.put("Action", Action)
                 .put("Msg", Msg);
@@ -45,13 +61,25 @@ public class MsgTool {
         }
     }
 
-    public void Boardcast(JSONObject JsonMsg) {
+    /**
+     * Send Msg to all User
+     *
+     * @param JsonMsg The json will be send
+     */
+    public void Broadcast(JSONObject JsonMsg) {
         for (Client client : Clients.values()) {
             client.Send(JsonMsg);
         }
     }
 
-    public void BoardcastLastMsg(String Action, String Msg, String... Args) {
+    /**
+     * Send Msg to all User and close All User
+     *
+     * @param Action Action field
+     * @param Msg    Msg Action field
+     * @param Args   More Args, A pair of Key-Value
+     */
+    public void BroadcastLastMsg(String Action, String Msg, String... Args) {
         JSONObject JsonMsg = new JSONObject();
         JsonMsg.put("Action", Action)
                 .put("Msg", Msg);

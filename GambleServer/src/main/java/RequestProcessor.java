@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class RequestProcessor implements Runnable {
-    private Thread thread;
     private LinkedBlockingQueue<Request> ReqQueue;
     private ConcurrentHashMap<String, Client> Clients;
     private MsgTool msgTool;
@@ -51,7 +50,7 @@ public class RequestProcessor implements Runnable {
     }
 
     public Thread Start() {
-        thread = new Thread(this);
+        Thread thread = new Thread(this);
         thread.start();
         return thread;
     }
@@ -71,7 +70,7 @@ public class RequestProcessor implements Runnable {
         if (!Clients.containsKey(name)) {
             Client c = new Client(name, req.ch, Clients);
             Clients.put(name, c);
-            msgTool.BoardcastExcept(name, "LoginNotify", String.format("User %s Login", name), "Name", name);
+            msgTool.BroadcastExcept(name, "LoginNotify", String.format("User %s Login", name), "Name", name);
             req.KeepOpen(true);
             res.put("State", "Success")
                     .put("Msg", String.format("User %s Login Successful", name))
@@ -122,7 +121,7 @@ public class RequestProcessor implements Runnable {
                                 .put("Name", c.Name)
                                 .put("SpendChips", SpendChips)
                                 .put("BetType", reqData.getBoolean("BetType"));
-                        msgTool.Boardcast(jsonMsg);
+                        msgTool.Broadcast(jsonMsg);
 
                         //此处不扣除，等结果确定后再处理
                         //c.Chips -= SpendChips;

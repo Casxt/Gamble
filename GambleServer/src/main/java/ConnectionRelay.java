@@ -16,7 +16,7 @@ public class ConnectionRelay {
     // https://stackoverflow.com/questions/2695426/are-linkedblockingqueues-insert-and-remove-methods-thread-safe
     LinkedBlockingQueue<Request> ReqQueue;
     ConcurrentHashMap<String, Client> Clients;
-    Accepter accepter;
+    Acceptor accepter;
 
 
 
@@ -37,7 +37,7 @@ public class ConnectionRelay {
         Server = AsynchronousServerSocketChannel.open(group);
         Server.bind(new InetSocketAddress(host, port));
 
-        accepter = new Accepter(Server, ReqQueue);
+        accepter = new Acceptor(Server, ReqQueue);
         Server.accept(new Request(ReqQueue), accepter);
     }
 
