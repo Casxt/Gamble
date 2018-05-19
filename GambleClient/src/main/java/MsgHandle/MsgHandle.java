@@ -11,6 +11,10 @@ public class MsgHandle {
         this.client = client;
     }
 
+    /**
+     * Parse Server Msg
+     * @param data raw Server Msg
+     */
     public void Parse(byte[] data) {
         String s = new String(data, java.nio.charset.StandardCharsets.UTF_8);
         JSONObject Msg = new JSONObject(s);
@@ -59,6 +63,7 @@ public class MsgHandle {
     private void GamblePrepareNotify(JSONObject Msg) {
         System.out.println("开始啦！大家快下注啦！赌大小啊！翻倍赢啊！");
         System.out.println(String.format("您有%s个筹码，请下注：", client.Chips));
+        client.IsJoin = false;
     }
 
     private void GambleStartNotify(JSONObject Msg) {

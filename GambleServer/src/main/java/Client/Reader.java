@@ -5,7 +5,7 @@ import java.nio.channels.CompletionHandler;
 import java.util.logging.Logger;
 
 /**
- * This class is mainly use to detect the err or client
+ * Reader is mainly use to detect the err or client
  */
 public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
     private Client client;

@@ -11,36 +11,35 @@ import java.util.concurrent.Future;
 public class GambleClient {
     private static AsynchronousSocketChannel serverCh;
     private static Client client;
-    private static SocketAddress Addr = new InetSocketAddress("127.0.0.1",12345);
+    private static SocketAddress Addr = new InetSocketAddress("127.0.0.1", 12345);
 
     public static void main(String[] args) {
-
-        System.out.println("连接中...");
-
-        Connect();
-        client = new Client(serverCh, Addr);
-        System.out.println("连接成功，请输入用户名：");
-
-        while (!client.Login()){
-            client.Close();
+        boolean restartFlag = false;
+        do {
+            System.out.println("连接中...");
             Connect();
-            client = new Client(serverCh, Addr);
-        }
-        client.Start();
+            client = new Client(serverCh);
+            System.out.println("连接成功，请输入用户名：");
 
+            while (!client.Login()) {
+                client.Close();
+                Connect();
+                client = new Client(serverCh);
+            }
+            client.Start();
 
-        System.out.println("您有100个筹码，请下注：");
+            System.out.println("您有100个筹码，请下注：");
+            Scanner sc = new Scanner(System.in);
+            CommandParser commandParser = new CommandParser(client, Addr);
+            while (client.IsWorking) {
+                restartFlag = commandParser.Parse(sc.nextLine());
+            }
 
-        Scanner sc = new Scanner(System.in);
-
-        CommandParser commandParser = new CommandParser(client, Addr);
-        while (true){
-            commandParser.Parse(sc.nextLine());
-        }
+        }while (restartFlag);
 
     }
 
-    private static void Connect(){
+    private static void Connect() {
         try {
             serverCh = AsynchronousSocketChannel.open();
             Future future = serverCh.connect(Addr);

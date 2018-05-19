@@ -11,36 +11,37 @@ class CommandParser {
     private Client client;
     private SocketAddress Addr;
     private static Logger log = Logger.getLogger(Request.class.getName());
-
-    private boolean isJoin = false;
-
     CommandParser(Client client, SocketAddress Addr) {
         this.Addr = Addr;
         this.client = client;
     }
 
     /**
-     * Parse the user input
+     * Parse the user input, if return true, the program will try to restart,
+     * false will closed
      *
      * @param cmd is user input
      */
-    void Parse(String cmd) {
+    boolean Parse(String cmd) {
 
-        Matcher matcher = Pattern.compile("^(\\d+) ([D|X])$").matcher(cmd);
+        if (client.IsWorking) {
+            Matcher matcher = Pattern.compile("^(\\d+) ([D|X])$").matcher(cmd);
+            if (matcher.find()) {
 
-        if (matcher.find()) {
-
-            if (!isJoin){
-                JoinGamble(Integer.parseInt(matcher.group(1)), matcher.group(2).equals("D"));
+                if (!client.IsJoin) {
+                    JoinGamble(Integer.parseInt(matcher.group(1)), matcher.group(2).equals("D"));
+                } else {
+                    System.out.println("你已经参加了本轮游戏");
+                }
             } else {
-                System.out.println("你已经参加了本轮游戏");
+                System.out.println(String.format("你说啥？要按套路出牌哦！您有%s个筹码，请下注：", client.Chips));
             }
-
         } else {
-            System.out.println(String.format("你说啥？要按套路出牌哦！您有%s个筹码，请下注：", client.Chips));
+            if (cmd.toLowerCase().equals("c")){
+                return true;
+            }
         }
-
-
+        return false;
     }
 
 
@@ -61,7 +62,7 @@ class CommandParser {
             JSONObject res = req.Send(jsonMsg);
 
             if (res.getString("State").equals("Success")) {
-                isJoin = true;
+                client.IsJoin  = true;
                 client.Chips -= num;
             } else {
                 log.info(res.getString("Msg"));

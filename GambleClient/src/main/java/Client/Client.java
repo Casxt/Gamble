@@ -4,12 +4,10 @@ import PackTool.PackTool;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
@@ -17,12 +15,12 @@ public class Client {
     private Reader reader = new Reader(this);
     public String Name;
     public String Token;
-    private SocketAddress Addr;
     public int Chips = 100;
+    public boolean IsJoin = false;
+    public boolean IsWorking = false;
 
-    public Client(AsynchronousSocketChannel ch, SocketAddress Addr) {
+    public Client(AsynchronousSocketChannel ch) {
         this.ch = ch;
-        this.Addr = Addr;
     }
 
     public void Start() {
@@ -30,22 +28,24 @@ public class Client {
     }
 
     void Quite() {
-        System.out.println("您已下线。");
         Close();
     }
 
     public void Close() {
+        IsWorking = false;
         try {
             ch.close();
+            System.out.println("您已掉线，c键重连，其他键退出：");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public boolean Login() {
 
-        Scanner sc = new Scanner(System.in);
-        Name = sc.nextLine();
+        Scanner scanner = new Scanner(System.in);
+        Name = scanner.nextLine();
         JSONObject req = new JSONObject();
 
         req.put("Action", "Login")
@@ -54,12 +54,10 @@ public class Client {
         try {
             PackTool packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
             ByteBuffer buff = packer.DataConstructor(req.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
-            Future future = ch.write(buff);
-            future.get();
+            ch.write(buff).get();
 
             buff = ByteBuffer.allocate(2048);
-            future = ch.read(buff);
-            future.get();
+            ch.read(buff).get();
             buff.flip();
 
             byte[] data = packer.DataDeconstructor(buff);
@@ -73,6 +71,7 @@ public class Client {
 
             if (res.getString("State").equals("Success")) {
                 Token = res.getString("Token");
+                IsWorking = true;
                 return true;
             } else {
                 System.out.println("用户名已经存在，请更换一个新名字：");
