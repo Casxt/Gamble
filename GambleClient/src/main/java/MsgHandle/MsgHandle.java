@@ -18,6 +18,9 @@ public class MsgHandle {
             case "LoginNotify":
                 LoginNotify(Msg);
                 break;
+            case "GamblerJoinNotify":
+                GamblerJoinNotify(Msg);
+                break;
             case "GamblePrepareNotify":
                 GamblePrepareNotify(Msg);
                 break;
@@ -30,6 +33,9 @@ public class MsgHandle {
             case "GambleResultNotify":
                 GambleResultNotify(Msg);
                 break;
+            case "GambleUserChipEmptyNotify":
+                GambleUserChipEmptyNotify(Msg);
+                break;
             case "GambleServerChipEmptyNotify":
                 GambleServerChipEmptyNotify(Msg);
                 break;
@@ -41,6 +47,13 @@ public class MsgHandle {
 
     public void LoginNotify(JSONObject Msg) {
         System.out.println(String.format("玩家 %s 加入游戏", Msg.getString("Name")));
+    }
+
+    public void GamblerJoinNotify(JSONObject Msg) {
+        System.out.println(String.format("%s下注%s个，押%s！",
+                Msg.getString("Name").equals(client.Name)?"你":Msg.getString("Name"),
+                Msg.getInt("SpendChips"),
+                Msg.getBoolean("BetType")?"大":"小"));
     }
 
     public void GamblePrepareNotify(JSONObject Msg) {
@@ -57,10 +70,28 @@ public class MsgHandle {
     }
 
     public void GambleResultNotify(JSONObject Msg) {
-        System.out.println(String.format("%s ", Msg.getString("Msg")));
+
+        if (Msg.getString("Res").equals("Win")) {
+            client.Chips = Msg.getInt("Remain");
+            System.out.println(String.format("你赢了，返还双倍共%s个筹码.", Msg.getInt("ChangeNum")));
+        } else {
+            client.Chips = Msg.getInt("Remain");
+            System.out.println(String.format("你输了，%s个筹码都归了庄家。", Msg.getInt("ChangeNum")));
+        }
+
+    }
+
+    public void GambleUserChipEmptyNotify(JSONObject Msg) {
+        if (Msg.getString("Name").equals(client.Name)) {
+            //你输个精光，别玩儿了！
+            System.out.println("你输个精光，别玩儿了！");
+        } else {
+            System.out.println(String.format("%s输个精光，被一脚踢出！", Msg.getString("Name")));
+        }
+
     }
 
     public void GambleServerChipEmptyNotify(JSONObject Msg) {
-        System.out.println(String.format("%s", Msg.getString("Msg")));
+        System.out.println(String.format("庄家运气怎么这么差，竟然输光了，掀桌子不玩儿了！大家散场啦！", Msg.getString("Msg")));
     }
 }

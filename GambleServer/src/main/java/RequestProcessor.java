@@ -115,8 +115,17 @@ public class RequestProcessor implements Runnable {
                     boolean success = game.Join(c, SpendChips, reqData.getBoolean("BetType"));
 
                     if (success) {
-                        msgTool.Boardcast("GamblerJoinNotify", "%s join Gamble", "Name", c.Name);
-                        c.Chips -= SpendChips;
+
+                        JSONObject jsonMsg = new JSONObject();
+                        jsonMsg .put("Action", "GamblerJoinNotify")
+                                .put("Msg", String.format("%s join Gamble",c.Name))
+                                .put("Name", c.Name)
+                                .put("SpendChips", SpendChips)
+                                .put("BetType", reqData.getBoolean("BetType"));
+                        msgTool.Boardcast(jsonMsg);
+
+                        //此处不扣除，等结果确定后再处理
+                        //c.Chips -= SpendChips;
                         res.put("State", "Success")
                                 .put("Msg", "You Join the Game!")
                                 .put("Chips", c.Chips);

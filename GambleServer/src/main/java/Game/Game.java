@@ -91,6 +91,13 @@ public class Game implements Runnable {
                 } else {
                     serverChips += g.Lose();
                 }
+
+                if (g.client.Chips <= 0){
+                    msgTool.BoardcastLastMsg("GambleUserChipEmptyNotify", String.format("%s输个精光，被一脚踢出！", g.client.Name),
+                            "Name", g.client.Name);
+                    g.client.Close();
+                }
+
             }
 
             if (serverChips < 0){

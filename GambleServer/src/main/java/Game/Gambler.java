@@ -19,23 +19,26 @@ public class Gambler {
     }
 
     public int Win() {
+        //因为之前没有扣除，所以这里只加一倍
+        client.Chips += chips;
         JSONObject res = new JSONObject()
                 .put("Action", "GambleResultNotify")
                 .put("Msg", String.format("You have win %d gamble", chips * 2))
                 .put("Res", "Win")
                 .put("ChangeNum", chips * 2)
-                .put("Remain", client.Chips += chips * 2);
+                .put("Remain", client.Chips);
         client.Send(res);
         return chips;
     }
 
     public int Lose() {
+        client.Chips -= chips;
         JSONObject res = new JSONObject()
                 .put("Action", "GambleResultNotify")
                 .put("Msg", String.format("You have lost %d gamble", chips))
                 .put("Res", "Lost")
                 .put("ChangeNum", chips)
-                .put("Remain", client.Chips -= chips);
+                .put("Remain", client.Chips);
         client.Send(res);
         return chips;
     }
