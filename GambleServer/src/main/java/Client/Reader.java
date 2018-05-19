@@ -13,7 +13,7 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
     private static String name = Reader.class.getName();
     private static Logger log = Logger.getLogger(name);
 
-    public Reader(Client client) {
+    Reader(Client client) {
         this.client = client;
     }
 

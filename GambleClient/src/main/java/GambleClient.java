@@ -9,13 +9,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class GambleClient {
-    static AsynchronousSocketChannel serverCh;
-    static Client client;
-    static SocketAddress Addr = new InetSocketAddress("127.0.0.1",12345);
-    private static CommandParser commandParser;
+    private static AsynchronousSocketChannel serverCh;
+    private static Client client;
+    private static SocketAddress Addr = new InetSocketAddress("127.0.0.1",12345);
+
     public static void main(String[] args) {
 
-        System.out.println("Connecting...");
+        System.out.println("连接中...");
 
         Connect();
         client = new Client(serverCh, Addr);
@@ -33,14 +33,14 @@ public class GambleClient {
 
         Scanner sc = new Scanner(System.in);
 
-        commandParser = new CommandParser(client, Addr);
+        CommandParser commandParser = new CommandParser(client, Addr);
         while (true){
-            commandParser.Parase(sc.nextLine());
+            commandParser.Parse(sc.nextLine());
         }
 
     }
 
-    public static void Connect(){
+    private static void Connect(){
         try {
             serverCh = AsynchronousSocketChannel.open();
             Future future = serverCh.connect(Addr);

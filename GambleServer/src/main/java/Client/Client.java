@@ -11,8 +11,8 @@ public class Client {
     public String Name;
     AsynchronousSocketChannel ch;
     public String Token;
-    ConcurrentHashMap<String, Client> Clients;
-    Writer writer;
+    private ConcurrentHashMap<String, Client> Clients;
+    private Writer writer;
     Reader reader;
     public int  Chips;
 
@@ -48,7 +48,7 @@ public class Client {
         }
     }
 
-    public void KeepOpen(boolean keepOpen) {
+    void KeepOpen(boolean keepOpen) {
         writer.keepOpen = keepOpen;
     }
 }

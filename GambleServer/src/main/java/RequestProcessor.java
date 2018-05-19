@@ -49,7 +49,7 @@ public class RequestProcessor implements Runnable {
         }
     }
 
-    public Thread Start() {
+    Thread Start() {
         Thread thread = new Thread(this);
         thread.start();
         return thread;
@@ -59,10 +59,10 @@ public class RequestProcessor implements Runnable {
      * {"Action":"Login",
      * "Name":Something}
      *
-     * @param req
-     * @return
+     * @param req should contain data above
+     * @return response
      */
-    public JSONObject UserLogin(Request req) {
+    private JSONObject UserLogin(Request req) {
 
         JSONObject reqData = req.body;
         JSONObject res = new JSONObject();
@@ -90,10 +90,10 @@ public class RequestProcessor implements Runnable {
      * "BetType":bool, ture = big, false = small
      * "Token":""}
      *
-     * @param req
-     * @return
+     * @param req should contain data above
+     * @return response
      */
-    public JSONObject JoinGamble(Request req) {
+    private JSONObject JoinGamble(Request req) {
         JSONObject reqData = req.body;
         JSONObject res = new JSONObject();
         String name = reqData.getString("Name");
@@ -116,8 +116,8 @@ public class RequestProcessor implements Runnable {
                     if (success) {
 
                         JSONObject jsonMsg = new JSONObject();
-                        jsonMsg .put("Action", "GamblerJoinNotify")
-                                .put("Msg", String.format("%s join Gamble",c.Name))
+                        jsonMsg.put("Action", "GamblerJoinNotify")
+                                .put("Msg", String.format("%s join Gamble", c.Name))
                                 .put("Name", c.Name)
                                 .put("SpendChips", SpendChips)
                                 .put("BetType", reqData.getBoolean("BetType"));

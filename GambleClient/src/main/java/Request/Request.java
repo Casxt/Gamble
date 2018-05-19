@@ -15,12 +15,13 @@ public class Request {
     private SocketAddress Addr;
     private AsynchronousSocketChannel ch;
     private static Logger log = Logger.getLogger(Request.class.getName());
-    public Request(SocketAddress Addr){
+
+    public Request(SocketAddress Addr) {
         this.Addr = Addr;
-        packer = new PackTool(new byte[] {'G','r','a','m','b','l','e'});
+        packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
     }
 
-    public JSONObject BaseObject(String Action, String Name, String Token){
+    public JSONObject BaseObject(String Action, String Name, String Token) {
         JSONObject JsonMsg = new JSONObject();
         JsonMsg.put("Action", Action)
                 .put("Name", Name)
@@ -60,7 +61,7 @@ public class Request {
             buff.flip();
             byte[] data = packer.DataDeconstructor(buff);
 
-            if (data == null){
+            if (data == null) {
                 log.info("Request Send Failed");
                 return null;
             }

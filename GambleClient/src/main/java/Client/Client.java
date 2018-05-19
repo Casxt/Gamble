@@ -13,30 +13,28 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
-    AsynchronousSocketChannel ch;
-    public Reader reader;
+    private AsynchronousSocketChannel ch;
+    private Reader reader = new Reader(this);
     public String Name;
     public String Token;
-    public SocketAddress Addr;
-    public int Chips;
+    private SocketAddress Addr;
+    public int Chips = 100;
 
     public Client(AsynchronousSocketChannel ch, SocketAddress Addr) {
         this.ch = ch;
         this.Addr = Addr;
-        reader = new Reader(this);
-        Chips = 100;
     }
 
     public void Start() {
         ch.read(reader.Buff, 35, TimeUnit.SECONDS, ch, reader);
     }
 
-    public void Quite() {
+    void Quite() {
         System.out.println("您已下线。");
         Close();
     }
 
-    public void Close(){
+    public void Close() {
         try {
             ch.close();
         } catch (IOException e) {
@@ -44,7 +42,7 @@ public class Client {
         }
     }
 
-    public boolean Login(){
+    public boolean Login() {
 
         Scanner sc = new Scanner(System.in);
         Name = sc.nextLine();
@@ -54,7 +52,7 @@ public class Client {
                 .put("Name", Name);
 
         try {
-            PackTool packer = new PackTool(new byte[] {'G','r','a','m','b','l','e'});
+            PackTool packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
             ByteBuffer buff = packer.DataConstructor(req.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
             Future future = ch.write(buff);
             future.get();
@@ -65,7 +63,7 @@ public class Client {
             buff.flip();
 
             byte[] data = packer.DataDeconstructor(buff);
-            if (data == null){
+            if (data == null) {
                 System.out.println("数据发送失败，请再次输入用户名：");
                 return false;
             }
@@ -73,7 +71,7 @@ public class Client {
             String s = new String(data, java.nio.charset.StandardCharsets.UTF_8);
             JSONObject res = new JSONObject(s);
 
-            if(res.getString("State").equals("Success")){
+            if (res.getString("State").equals("Success")) {
                 Token = res.getString("Token");
                 return true;
             } else {
