@@ -1,6 +1,5 @@
 package Client;
 
-import com.sun.org.apache.xpath.internal.Arg;
 import org.json.JSONObject;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,15 +11,15 @@ public class MsgTool {
         this.Clients = Clients;
     }
 
-    public void BoardcastExcept(String name, String Action, String Msg, String ...Args) {
+    public void BoardcastExcept(String name, String Action, String Msg, String... Args) {
         JSONObject JsonMsg = new JSONObject();
         JsonMsg.put("Action", Action)
                 .put("Msg", Msg);
-        for (int i = 0; i < Args.length; i+=2) {
-            JsonMsg.put(Args[i], Args[i+1]);
+        for (int i = 0; i < Args.length; i += 2) {
+            JsonMsg.put(Args[i], Args[i + 1]);
         }
         for (Client client : Clients.values()) {
-            if(!client.Name.equals(name)) {
+            if (!client.Name.equals(name)) {
                 client.Send(JsonMsg);
             }
         }
@@ -28,18 +27,18 @@ public class MsgTool {
 
     public void BoardcastExcept(String name, JSONObject JsonMsg) {
         for (Client client : Clients.values()) {
-            if(!client.Name.equals(name)) {
+            if (!client.Name.equals(name)) {
                 client.Send(JsonMsg);
             }
         }
     }
 
-    public void Boardcast(String Action, String Msg, String ...Args) {
+    public void Boardcast(String Action, String Msg, String... Args) {
         JSONObject JsonMsg = new JSONObject();
         JsonMsg.put("Action", Action)
                 .put("Msg", Msg);
-        for (int i = 0; i < Args.length; i+=2) {
-            JsonMsg.put(Args[i], Args[i+1]);
+        for (int i = 0; i < Args.length; i += 2) {
+            JsonMsg.put(Args[i], Args[i + 1]);
         }
         for (Client client : Clients.values()) {
             client.Send(JsonMsg);
@@ -52,12 +51,12 @@ public class MsgTool {
         }
     }
 
-    public void BoardcastLastMsg(String Action, String Msg, String ...Args) {
+    public void BoardcastLastMsg(String Action, String Msg, String... Args) {
         JSONObject JsonMsg = new JSONObject();
         JsonMsg.put("Action", Action)
                 .put("Msg", Msg);
-        for (int i = 0; i < Args.length; i+=2) {
-            JsonMsg.put(Args[i], Args[i+1]);
+        for (int i = 0; i < Args.length; i += 2) {
+            JsonMsg.put(Args[i], Args[i + 1]);
         }
 
         for (Client client : Clients.values()) {

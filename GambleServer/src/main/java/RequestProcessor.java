@@ -7,19 +7,20 @@ import Game.Game;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class RequestProcessor implements Runnable  {
+public class RequestProcessor implements Runnable {
     private Thread thread;
     private LinkedBlockingQueue<Request> ReqQueue;
     private ConcurrentHashMap<String, Client> Clients;
     private MsgTool msgTool;
     private Game game;
-    RequestProcessor(LinkedBlockingQueue<Request> ReqQueue, ConcurrentHashMap<String, Client> Clients){
+
+    RequestProcessor(LinkedBlockingQueue<Request> ReqQueue, ConcurrentHashMap<String, Client> Clients, Game game) {
         this.ReqQueue = ReqQueue;
         this.Clients = Clients;
         msgTool = new MsgTool(Clients);
     }
 
-    public void run(){
+    public void run() {
         while (true) {
             try {
                 JSONObject res;
@@ -35,7 +36,7 @@ public class RequestProcessor implements Runnable  {
                         break;
                     default:
                         res = new JSONObject();
-                        res.put("State","Failed")
+                        res.put("State", "Failed")
                                 .put("Msg", "Invalid Action");
                         break;
                 }
@@ -49,7 +50,7 @@ public class RequestProcessor implements Runnable  {
     }
 
     public Thread Start() {
-        thread = new Thread (this);
+        thread = new Thread(this);
         thread.start();
         return thread;
     }
@@ -57,21 +58,22 @@ public class RequestProcessor implements Runnable  {
     /**
      * {"Action":"Login",
      * "Name":Something}
+     *
      * @param req
      * @return
      */
-    public JSONObject UserLogin(Request req){
+    public JSONObject UserLogin(Request req) {
 
         JSONObject reqData = req.body;
         JSONObject res = new JSONObject();
         String name = reqData.getString("Name");
-        if (!Clients.containsKey(name)){
+        if (!Clients.containsKey(name)) {
             Client c = new Client(name, req.ch, Clients);
             Clients.put(name, c);
-            msgTool.BoardcastExcept(name, "LoginNotify", String.format("User %s Login",name), "Name", name);
+            msgTool.BoardcastExcept(name, "LoginNotify", String.format("User %s Login", name), "Name", name);
             req.KeepOpen(true);
             res.put("State", "Success")
-                    .put("Msg", String.format("User %s Login Successful",name))
+                    .put("Msg", String.format("User %s Login Successful", name))
                     .put("Token", c.Token);
             return res;
         }
@@ -87,34 +89,40 @@ public class RequestProcessor implements Runnable  {
      * "SpendChips":Num,
      * "BetType":bool, ture = big, false = small
      * "Token":""}
+     *
      * @param req
      * @return
      */
-    public JSONObject JoinGamble(Request req){
+    public JSONObject JoinGamble(Request req) {
         JSONObject reqData = req.body;
         JSONObject res = new JSONObject();
         String name = reqData.getString("Name");
         String token = reqData.getString("Token");
-        if (Clients.containsKey(name)){
+        // Check User
+        if (Clients.containsKey(name)) {
             Client c = Clients.get(name);
-            if (c.Token == token){
+
+            // Check Token
+            if (c.Token.equals(token)) {
 
                 int SpendChips = reqData.getInt("SpendChips");
-                if (c.Chips >= SpendChips){
 
-                    c.Chips -= SpendChips;
+                // Check Chips
+                if (c.Chips >= SpendChips) {
 
-                    boolean success =  game.Join(c, SpendChips, reqData.getBoolean("BetType"));
 
-                    msgTool.Boardcast("GamblerJoinNotify", "%s join Gamble", "Name", c.Name);
+                    boolean success = game.Join(c, SpendChips, reqData.getBoolean("BetType"));
 
-                    if (success){
+                    if (success) {
+                        msgTool.Boardcast("GamblerJoinNotify", "%s join Gamble", "Name", c.Name);
+                        c.Chips -= SpendChips;
                         res.put("State", "Success")
                                 .put("Msg", "You Join the Game!")
                                 .put("Chips", c.Chips);
                     } else {
                         res.put("State", "Failed")
-                                .put("Msg", "Already Joined");
+                                .put("Msg", "Already Joined")
+                                .put("Chips", c.Chips);
                     }
 
                 } else {

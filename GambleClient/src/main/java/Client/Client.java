@@ -4,6 +4,7 @@ import PackTool.PackTool;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Scanner;
@@ -16,9 +17,12 @@ public class Client {
     public Reader reader;
     public String Name;
     public String Token;
+    public SocketAddress Addr;
     public int Chips;
-    public Client(AsynchronousSocketChannel ch) {
+
+    public Client(AsynchronousSocketChannel ch, SocketAddress Addr) {
         this.ch = ch;
+        this.Addr = Addr;
         reader = new Reader(this);
         Chips = 100;
     }
@@ -59,8 +63,7 @@ public class Client {
             future = ch.read(buff);
             future.get();
             buff.flip();
-            String t = new String(buff.array());
-            System.out.println(t);
+
             byte[] data = packer.DataDeconstructor(buff);
             if (data == null){
                 System.out.println("数据发送失败，请再次输入用户名：");

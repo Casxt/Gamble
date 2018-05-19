@@ -18,7 +18,7 @@ public class ConnectionRelay {
     ConcurrentHashMap<String, Client> Clients;
     Accepter accepter;
 
-    RequestProcessor[] requestProcessors;
+
 
     public ConnectionRelay() throws IOException {
         // more detail of ThreadPool please see
@@ -29,10 +29,7 @@ public class ConnectionRelay {
         accepter = null;
         ReqQueue = new LinkedBlockingQueue<>();
         Clients = new ConcurrentHashMap<>();
-        requestProcessors = new RequestProcessor[1];
-        for (int i = 0; i < requestProcessors.length; i++) {
-            requestProcessors[i] = new RequestProcessor(ReqQueue, Clients);
-        }
+
 
     }
 
@@ -41,10 +38,6 @@ public class ConnectionRelay {
         Server.bind(new InetSocketAddress(host, port));
 
         accepter = new Accepter(Server, ReqQueue);
-
-        for (RequestProcessor requestProcessor : requestProcessors) {
-            requestProcessor.Start();
-        }
         Server.accept(new Request(ReqQueue), accepter);
     }
 
