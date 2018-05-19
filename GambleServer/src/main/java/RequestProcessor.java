@@ -17,6 +17,7 @@ public class RequestProcessor implements Runnable {
     RequestProcessor(LinkedBlockingQueue<Request> ReqQueue, ConcurrentHashMap<String, Client> Clients, Game game) {
         this.ReqQueue = ReqQueue;
         this.Clients = Clients;
+        this.game = game;
         msgTool = new MsgTool(Clients);
     }
 

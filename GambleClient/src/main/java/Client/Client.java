@@ -28,7 +28,7 @@ public class Client {
     }
 
     public void Start() {
-        ch.read(reader.Buff, 20, TimeUnit.SECONDS, ch, reader);
+        ch.read(reader.Buff, 35, TimeUnit.SECONDS, ch, reader);
     }
 
     public void Quite() {

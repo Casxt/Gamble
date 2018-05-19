@@ -1,6 +1,5 @@
 package Request;
 
-import Client.Client;
 import PackTool.PackTool;
 import org.json.JSONObject;
 
@@ -9,13 +8,12 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 public class Request {
-    PackTool packer;
-    SocketAddress Addr;
-    AsynchronousSocketChannel ch;
+    private PackTool packer;
+    private SocketAddress Addr;
+    private AsynchronousSocketChannel ch;
     private static Logger log = Logger.getLogger(Request.class.getName());
     public Request(SocketAddress Addr){
         this.Addr = Addr;
