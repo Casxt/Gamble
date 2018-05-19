@@ -51,7 +51,7 @@ public class RequestProcessor implements Runnable  {
         JSONObject res = new JSONObject();
         String name = reqData.getString("Name");
         if (!Clients.containsKey(name)){
-            Client c = new Client(name, req.ch);
+            Client c = new Client(name, req.ch, Clients);
             Clients.put(name, c);
             req.KeepOpen();
             res.put("State", "Success")

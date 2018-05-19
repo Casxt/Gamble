@@ -11,11 +11,11 @@ import java.util.concurrent.TimeUnit;
  * Request.Request will format a socket data into request
  */
 public class Request {
-    AsynchronousSocketChannel ch;
+    public AsynchronousSocketChannel ch;
     private LinkedBlockingQueue<Request> ReqQueue;
     private RequestReader reader;
     private RequestWriter writer;
-    JSONObject body;
+    public JSONObject body;
 
     public Request(LinkedBlockingQueue<Request> ReqQueue){
         this.ReqQueue = ReqQueue;

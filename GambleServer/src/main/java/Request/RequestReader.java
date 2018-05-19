@@ -32,7 +32,7 @@ public class RequestReader implements CompletionHandler<Integer, AsynchronousSoc
 
             } else {// if data incomplete, read more
                 if(readTimes < 4) {//if read too many times
-                    req.ch.read(Buff, 10, TimeUnit.SECONDS, ch, this);
+                    ch.read(Buff, 10, TimeUnit.SECONDS, ch, this);
                 } else {
                     req.Close();
                 }
