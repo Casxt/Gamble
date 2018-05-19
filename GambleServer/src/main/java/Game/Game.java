@@ -39,11 +39,12 @@ public class Game implements Runnable {
      * @return if already join, return false
      */
     public boolean Join(Client client, int chips, boolean betType){
-        if (!Gamblers.containsKey(client.Name)) {
-            Gamblers.put(name, new Gambler(client, chips, betType?BetType.Big:BetType.Small));
-            return true;
+        synchronized (Gamblers) {
+            if (!Gamblers.containsKey(client.Name)) {
+                Gamblers.put(name, new Gambler(client, chips, betType ? BetType.Big : BetType.Small));
+                return true;
+            }else return false;
         }
-        else return false;
     }
 
 
