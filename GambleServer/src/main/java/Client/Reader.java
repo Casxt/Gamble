@@ -22,7 +22,7 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
         if (result != -1){
             ch.read(null,ch,this);
         } else {
-            log.info("client closed");
+            log.info(String.format("client %s read -1 and closed", client.Name));
             client.Close();
         }
     }
@@ -30,9 +30,13 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
 
     @Override
     public void failed(Throwable e, AsynchronousSocketChannel ch) {
-        // if Client.Client Closed, may cause this err
-        log.info("client closed");
-        client.Close();
-        //e.printStackTrace();
+        if (e instanceof java.nio.channels.InterruptedByTimeoutException) {
+            client.Close();
+            log.info(String.format("client %s Timeout and closed", client.Name));
+        } else {
+            log.info("client closed");
+            client.Close();
+            e.printStackTrace();
+        }
     }
 }

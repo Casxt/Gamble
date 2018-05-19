@@ -9,6 +9,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class Client {
     private AsynchronousSocketChannel ch;
@@ -29,23 +30,30 @@ public class Client {
 
     void Quite() {
         Close();
+        System.out.println("您已掉线，c键重连，其他键退出：");
     }
 
     public void Close() {
         IsWorking = false;
-        try {
-            ch.close();
-            System.out.println("您已掉线，c键重连，其他键退出：");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (ch != null) {
+            try {
+                ch.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     public boolean Login() {
-
+        System.out.println("连接成功，请输入用户名：");
         Scanner scanner = new Scanner(System.in);
         Name = scanner.nextLine();
+
+        if (!Pattern.matches("^\\S{1,32}$", Name)) {
+            System.out.println("无效输入，请重新输入用户名：");
+            return false;
+        }
+
         JSONObject req = new JSONObject();
 
         req.put("Action", "Login")
@@ -79,7 +87,7 @@ public class Client {
             }
 
         } catch (InterruptedException | ExecutionException e) {
-            System.out.println("数据读取异常，请再次输入用户名：");
+            System.out.println("连接异常，请再次输入用户名：");
             e.printStackTrace();
             return false;
         }

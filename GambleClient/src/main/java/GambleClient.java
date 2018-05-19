@@ -6,46 +6,52 @@ import java.net.SocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class GambleClient {
-    private static AsynchronousSocketChannel serverCh;
-    private static Client client;
-    private static SocketAddress Addr = new InetSocketAddress("127.0.0.1", 12345);
+
 
     public static void main(String[] args) {
-        boolean restartFlag = false;
-        do {
-            System.out.println("连接中...");
-            Connect();
-            client = new Client(serverCh);
-            System.out.println("连接成功，请输入用户名：");
 
-            while (!client.Login()) {
+        boolean restartFlag = false;
+        SocketAddress address = new InetSocketAddress("127.0.0.1", 12345);
+        Client client;
+        AsynchronousSocketChannel serverCh;
+
+        do {
+            System.out.print("连接中");
+            serverCh = Connect(address);
+            client = new Client(serverCh);
+
+            while (serverCh == null || !client.Login()) {
+                System.out.print(".");
                 client.Close();
-                Connect();
+                serverCh = Connect(address);
                 client = new Client(serverCh);
             }
             client.Start();
 
             System.out.println("您有100个筹码，请下注：");
             Scanner sc = new Scanner(System.in);
-            CommandParser commandParser = new CommandParser(client, Addr);
+            CommandParser commandParser = new CommandParser(client, address);
+
             while (client.IsWorking) {
                 restartFlag = commandParser.Parse(sc.nextLine());
             }
 
-        }while (restartFlag);
+        } while (restartFlag);
 
     }
 
-    private static void Connect() {
+    private static AsynchronousSocketChannel Connect(SocketAddress Addr) {
+        AsynchronousSocketChannel serverCh;
         try {
             serverCh = AsynchronousSocketChannel.open();
-            Future future = serverCh.connect(Addr);
-            future.get();
+            serverCh.connect(Addr).get();
+            return serverCh;
         } catch (IOException | InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            //System.out.println(e.toString().endsWith("远程计算机拒绝网络连接。"));
+            //e.printStackTrace();
+            return null;
         }
     }
 

@@ -11,14 +11,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 public class Request {
-    private PackTool packer;
-    private SocketAddress Addr;
+    private PackTool packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
+    private SocketAddress address;
     private AsynchronousSocketChannel ch;
     private static Logger log = Logger.getLogger(Request.class.getName());
 
-    public Request(SocketAddress Addr) {
-        this.Addr = Addr;
-        packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
+    public Request(SocketAddress address) {
+        this.address = address;
     }
 
     public JSONObject BaseObject(String Action, String Name, String Token) {
@@ -30,18 +29,9 @@ public class Request {
     }
 
     public JSONObject Send(JSONObject JsonMsg) {
-        /*
-        JSONObject JsonMsg = new JSONObject();
-        JsonMsg.put("Action", Action)
-                .put("Name", Name)
-                .put("Token", Token);
-        for (int i = 0; i < Args.length; i+=2) {
-            JsonMsg.put(Args[i], Args[i+1]);
-        }
-        */
         try {
             ch = AsynchronousSocketChannel.open();
-            ch.connect(Addr).get();
+            ch.connect(address).get();
         } catch (InterruptedException | ExecutionException | IOException e) {
             log.info("Request Conn Failed");
         }

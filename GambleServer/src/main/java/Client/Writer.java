@@ -12,7 +12,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
     private static String name = Reader.class.getName();
     private static Logger log = Logger.getLogger(name);
     private Client client;
-    LinkedBlockingQueue<ByteBuffer> buffers;
+    private LinkedBlockingQueue<ByteBuffer> buffers;
     private PackTool packer;
     /**
      * If KeepOpen is true, writer will not close the connection,
@@ -20,7 +20,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      * or this request is for client.
      * The default value is false
      */
-    public boolean keepOpen = true;
+    boolean keepOpen = true;
     /**
      * isSending control the process of sending data
      */
@@ -30,7 +30,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      */
     private int sendTimes = 0;
 
-    public Writer(Client client) {
+    Writer(Client client) {
         this.client = client;
         buffers = new LinkedBlockingQueue<>();
         packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
@@ -42,7 +42,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      *
      * @param data waite to be send
      */
-    public boolean Write(byte[] data) {
+    boolean Write(byte[] data) {
         boolean res = buffers.offer(packer.DataConstructor(data));
         if (!isSending && !buffers.isEmpty()) {
             continueSend();
@@ -69,6 +69,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
                 if (sendTimes < 4) {
                     client.ch.write(buffer, 10, TimeUnit.SECONDS, buffer, this);
                 } else {//Already send too many times
+                    log.info(String.format("client %s Timeout and closed", client.Name));
                     client.Close();
                 }
             } else {
@@ -89,8 +90,13 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
 
     @Override
     public void failed(Throwable e, ByteBuffer buffer) {
-        log.info("client closed");
-        client.Close();
-        //e.printStackTrace();
+        if (e instanceof java.nio.channels.InterruptedByTimeoutException) {
+            client.Close();
+            log.info(String.format("client %s Timeout and closed", client.Name));
+        } else {
+            log.info("client closed");
+            client.Close();
+            e.printStackTrace();
+        }
     }
 }

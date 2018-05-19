@@ -14,7 +14,7 @@ public class Game implements Runnable {
     private MsgTool msgTool;
     private static String name = Game.class.getName();
     private static Logger log = Logger.getLogger(name);
-    private static int serverChips = 5000;
+    private static int serverChips = 100;
 
     public Game(ConcurrentHashMap<String, Client> Clients) {
         this.Clients = Clients;
@@ -56,7 +56,7 @@ public class Game implements Runnable {
             // Delay
             try {
                 //See more detail at http://www.importnew.com/7219.html
-                TimeUnit.SECONDS.sleep(30);
+                TimeUnit.SECONDS.sleep(10);
             } catch (InterruptedException e) {
                 return;
             }
