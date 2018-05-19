@@ -1,14 +1,18 @@
+package Request;
+
+import PackTool.PackTool;
+
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.TimeUnit;
 
-public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
+public class RequestReader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
     private Request req;
     ByteBuffer Buff;
     private PackTool depacker;
     private int readTimes;
-    public Reader(Request req) {
+    public RequestReader(Request req) {
         this.req = req;
         Buff = ByteBuffer.allocate(2048);
         depacker = new PackTool(new byte[] {'G','r','a','m','b','l','e'});
@@ -42,7 +46,7 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
 
     @Override
     public void failed(Throwable e, AsynchronousSocketChannel ch) {
-        // if Client Closed, may cause this err
+        // if Client.Client Closed, may cause this err
         req.Close();
         e.printStackTrace();
     }

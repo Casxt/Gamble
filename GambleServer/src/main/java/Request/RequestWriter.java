@@ -1,9 +1,10 @@
+package Request;
+
+import PackTool.PackTool;
 import java.nio.ByteBuffer;
 import java.nio.channels.CompletionHandler;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.zip.CRC32;
 
-public class Writer implements CompletionHandler<Integer, ByteBuffer> {
+public class RequestWriter implements CompletionHandler<Integer, ByteBuffer> {
     private Request req;
     private ByteBuffer buffer;
     private PackTool packer;
@@ -15,7 +16,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      */
     public boolean keepOpen = false;
 
-    public Writer(Request req) {
+    public RequestWriter(Request req) {
         this.req = req;
         buffer = ByteBuffer.allocate(2048);
         packer = new PackTool(new byte[] {'G','r','a','m','b','l','e'});

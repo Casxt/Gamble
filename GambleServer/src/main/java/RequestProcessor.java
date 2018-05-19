@@ -1,3 +1,5 @@
+import Client.Client;
+import Request.Request;
 import org.json.JSONObject;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +25,6 @@ public class RequestProcessor implements Runnable  {
                     case "Login":
                         res = UserLogin(req);
                         break;
-
                     default:
                         res = new JSONObject();
                         res.put("State","Failed")
@@ -52,6 +53,7 @@ public class RequestProcessor implements Runnable  {
         if (!Clients.containsKey(name)){
             Client c = new Client(name, req.ch);
             Clients.put(name, c);
+            req.KeepOpen();
             res.put("State", "Success")
                     .put("Msg", "User %s Login Successful")
                     .put("Token", c.Token);

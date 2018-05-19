@@ -1,5 +1,6 @@
+package PackTool;
+
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.zip.CRC32;
 
 public class PackTool {
@@ -17,7 +18,7 @@ public class PackTool {
     public void Reset(){
         count = 0;
     }
-    
+
     public boolean MatchHead(ByteBuffer buffer){
         //init the sum of count
         count = len - 1;

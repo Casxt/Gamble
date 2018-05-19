@@ -1,3 +1,5 @@
+package Request;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -6,21 +8,21 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Request will format a socket data into request
+ * Request.Request will format a socket data into request
  */
 public class Request {
     AsynchronousSocketChannel ch;
     private LinkedBlockingQueue<Request> ReqQueue;
-    private Reader reader;
-    private Writer writer;
+    private RequestReader reader;
+    private RequestWriter writer;
     JSONObject body;
 
     public Request(LinkedBlockingQueue<Request> ReqQueue){
         this.ReqQueue = ReqQueue;
         ch = null;
-        reader = new Reader(this);
+        reader = new RequestReader(this);
         body = null;
-        writer = new Writer(this);
+        writer = new RequestWriter(this);
     }
 
     public void Response(JSONObject res){
