@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
     private Client client;
-    ByteBuffer Buff;
+    public ByteBuffer Buff;
     private PackTool depacker;
 
     private int readTimes = 0;
@@ -32,7 +32,9 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
             if(data != null){
 
                 MsgHandle.Parse(data);
-
+                //开始接受下次消息
+                readTimes = 0;
+                ch.read(Buff, 20, TimeUnit.SECONDS, ch, this);
             } else {// if data incomplete, read more
                 if(readTimes < 4) {//if read too many times
                     //因为一直在开局，所以应该不会长时间无消息
@@ -52,15 +54,7 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
     @Override
     public void failed(Throwable e, AsynchronousSocketChannel ch) {
         // if Client.Client Closed, may cause this err
-        req.Close();
+        client.Quite();
         e.printStackTrace();
-    }
-
-    /**
-     * Reset buffer and read counter
-     */
-    public void Reset(){
-        Buff.clear();
-        readTimes = 0;
     }
 }

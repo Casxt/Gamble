@@ -1,3 +1,4 @@
+import Client.Client;
 import PackTool.PackTool;
 import org.json.JSONObject;
 
@@ -11,13 +12,14 @@ import java.util.concurrent.Future;
 
 public class GambleClient {
     static AsynchronousSocketChannel serverCh;
+    static Client client;
     public static void main(String[] args) {
         System.out.println("Connecting...");
         Connect();
+        client = new Client(serverCh);
         System.out.println("连接成功，请输入用户名：");
-        while (!Login()){
-
-        }
+        while (!client.Login()){ }
+        client.Start();
         System.out.println("您有100个筹码，请下注：");
 
     }

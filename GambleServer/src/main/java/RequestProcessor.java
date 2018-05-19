@@ -56,9 +56,7 @@ public class RequestProcessor implements Runnable  {
         if (!Clients.containsKey(name)){
             Client c = new Client(name, req.ch, Clients);
             Clients.put(name, c);
-
-            msgTool.Boardcast("LoginNotify", String.format("User %s Login",name), "Name", name);
-
+            msgTool.BoardcastExcept(name, "LoginNotify", String.format("User %s Login",name), "Name", name);
             req.KeepOpen();
             res.put("State", "Success")
                     .put("Msg", String.format("User %s Login Successful",name))

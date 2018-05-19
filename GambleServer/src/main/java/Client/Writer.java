@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 public class Writer implements CompletionHandler<Integer, ByteBuffer> {
     private Client client;
     LinkedBlockingQueue<ByteBuffer> buffers;
-    private ByteBuffer buffer;
     private PackTool packer;
     /**
      * If KeepOpen is true, writer will not close the connection,
@@ -30,7 +29,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
 
     public Writer(Client client) {
         this.client = client;
-        buffer = ByteBuffer.allocate(2048);
+        buffers = new LinkedBlockingQueue<>();
         packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
     }
 
@@ -41,7 +40,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      * @param data waite to be send
      */
     public boolean Write(byte[] data) {
-        boolean res = buffers.offer(ByteBuffer.wrap(data));
+        boolean res = buffers.offer(packer.DataConstructor(data));
         if (!isSending && !buffers.isEmpty()) {
             continueSend();
         }
