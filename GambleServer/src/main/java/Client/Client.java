@@ -1,5 +1,7 @@
 package Client;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.UUID;
@@ -10,7 +12,8 @@ public class Client {
     AsynchronousSocketChannel ch;
     public String Token;
     ConcurrentHashMap<String, Client> Clients;
-
+    ClientWriter writer;
+    ClientReader reader;
     int Chips;
 
     public Client(String Name, AsynchronousSocketChannel ch, ConcurrentHashMap<String, Client> Clients){
@@ -20,6 +23,17 @@ public class Client {
         this.ch = ch;
         this.Name = Name;
         this.Clients = Clients;
+        reader = new ClientReader(this);
+        writer = new ClientWriter(this);
+    }
+
+    /**
+     * Send A Msg to Client
+     * @param Msg should be complete, It will be send directly
+     * @return whether the msg write into the waiting buff
+     */
+    public boolean Send(JSONObject Msg) {
+        return writer.Write(Msg.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
     }
 
     /**

@@ -5,6 +5,7 @@ import PackTool.PackTool;
 import java.nio.ByteBuffer;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class ClientWriter implements CompletionHandler<Integer, ByteBuffer> {
     private Client client;
@@ -41,7 +42,7 @@ public class ClientWriter implements CompletionHandler<Integer, ByteBuffer> {
     public boolean Write(byte[] data) {
         boolean res =  buffers.offer(ByteBuffer.wrap(data));
         if(!isSending && !buffers.isEmpty()){
-            ContinueSend();
+            continueSend();
         }
         return res;
     }
@@ -49,20 +50,29 @@ public class ClientWriter implements CompletionHandler<Integer, ByteBuffer> {
     /**
      * Send the data in buffer which written by Write()
      */
-    public void ContinueSend(){
+    private void continueSend(){
         isSending = true;
-        client.ch.write(buffer, buffer, this);
+        //poll is a nonblocking method
+        ByteBuffer buff = buffers.poll();
+        sendTimes++;
+        client.ch.write(buff,  10, TimeUnit.SECONDS, buff, this);
     }
 
     @Override
     public void completed(Integer result, ByteBuffer buffer) {
         if(result!=-1) {
             if (buffer.hasRemaining()){
-                client.ch.write(buffer, buffer, this);
+                sendTimes++;
+                if(sendTimes < 4){
+                    client.ch.write(buffer, 10, TimeUnit.SECONDS, buffer, this);
+                }else{//Already send too many times
+                    client.Close();
+                }
             } else {
+                sendTimes = 0;
                 isSending = false;
                 if(!buffers.isEmpty()){
-                    ContinueSend();
+                    continueSend();
                 } else if(!keepOpen){
                     client.Close();
                 }
