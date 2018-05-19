@@ -9,13 +9,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class Game implements Runnable {
+    private static String name = Game.class.getName();
+    private static Logger log = Logger.getLogger(name);
+    private static int serverChips = 0;
     //private ConcurrentHashMap<String, Client> Clients;
     private ConcurrentHashMap<String, Gambler> Gamblers;
     private Random ran;
     private MsgTool msgTool;
-    private static String name = Game.class.getName();
-    private static Logger log = Logger.getLogger(name);
-    private static int serverChips = 0;
 
     public Game(ConcurrentHashMap<String, Client> Clients) {
         Gamblers = new ConcurrentHashMap<>();

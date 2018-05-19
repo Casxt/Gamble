@@ -8,10 +8,9 @@ import java.util.logging.Logger;
  * Reader is mainly use to detect the err or client
  */
 public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
-    private Client client;
-
     private static String name = Reader.class.getName();
     private static Logger log = Logger.getLogger(name);
+    private Client client;
 
     Reader(Client client) {
         this.client = client;
@@ -19,8 +18,8 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
 
     @Override
     public void completed(Integer result, AsynchronousSocketChannel ch) {
-        if (result != -1){
-            ch.read(null,ch,this);
+        if (result != -1) {
+            ch.read(null, ch, this);
         } else {
             log.info(String.format("client %s read -1 and closed", client.Name));
             client.Close();

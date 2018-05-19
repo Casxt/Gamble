@@ -7,9 +7,6 @@ import java.nio.channels.CompletionHandler;
 import java.util.concurrent.TimeUnit;
 
 public class Writer implements CompletionHandler<Integer, ByteBuffer> {
-    private Request req;
-    private ByteBuffer buffer = ByteBuffer.allocate(2048);
-    private PackTool packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
     /**
      * If KeepOpen is true, writer will not close the connection,
      * is was useful when there was a long connection,
@@ -18,6 +15,9 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      */
     boolean keepOpen = false;
     int sendTimes = 0;
+    private Request req;
+    private ByteBuffer buffer = ByteBuffer.allocate(2048);
+    private PackTool packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
 
 
     Writer(Request req) {
@@ -64,7 +64,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
         sendTimes++;
         if (result != -1) {
             if (buffer.hasRemaining()) {
-                if (sendTimes < 4){
+                if (sendTimes < 4) {
                     req.ch.write(buffer, 10, TimeUnit.SECONDS, buffer, this);
                 } else {// if Send too many times
                     req.Close();
@@ -82,7 +82,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
 
     @Override
     public void failed(Throwable e, ByteBuffer buffer) {
-        if(e instanceof java.nio.channels.InterruptedByTimeoutException){
+        if (e instanceof java.nio.channels.InterruptedByTimeoutException) {
             req.Close();
         } else {
             req.Close();

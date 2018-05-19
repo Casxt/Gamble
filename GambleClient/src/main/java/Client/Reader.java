@@ -1,7 +1,7 @@
 package Client;
 
-import PackTool.PackTool;
 import MsgHandle.MsgHandle;
+import PackTool.PackTool;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -9,8 +9,8 @@ import java.nio.channels.CompletionHandler;
 import java.util.concurrent.TimeUnit;
 
 public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
-    private Client client;
     ByteBuffer Buff = ByteBuffer.allocate(2048);
+    private Client client;
     private PackTool depacker = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
     private MsgHandle msgHandle;
 

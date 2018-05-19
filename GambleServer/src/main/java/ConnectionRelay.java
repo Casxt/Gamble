@@ -10,13 +10,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 class ConnectionRelay {
-    private AsynchronousChannelGroup group;
     // LinkedBlockingQueue are Thread safe, see:
     // https://stackoverflow.com/questions/2695426/are-linkedblockingqueues-insert-and-remove-methods-thread-safe
     LinkedBlockingQueue<Request> ReqQueue;
     ConcurrentHashMap<String, Client> Clients;
-    private Acceptor acceptor;
     AsynchronousServerSocketChannel server;
+    private AsynchronousChannelGroup group;
+    private Acceptor acceptor;
 
     ConnectionRelay() throws IOException {
         // more detail of ThreadPool please see

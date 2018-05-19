@@ -5,8 +5,8 @@ import org.json.JSONObject;
 
 class Gambler {
     Client client;
-    private int chips;
     BetType betType;
+    private int chips;
 
     Gambler(Client client, int chips, BetType betType) {
         this.client = client;

@@ -1,20 +1,20 @@
 import Client.Client;
 import Client.MsgTool;
+import Game.Game;
 import Request.Request;
 import org.json.JSONObject;
-import Game.Game;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 public class RequestProcessor implements Runnable {
+    private static Logger log = Logger.getLogger(RequestProcessor.class.getName());
+    Thread thread;
     private LinkedBlockingQueue<Request> ReqQueue;
     private ConcurrentHashMap<String, Client> Clients;
     private MsgTool msgTool;
     private Game game;
-    Thread thread;
-    private static Logger log = Logger.getLogger(RequestProcessor.class.getName());
 
     RequestProcessor(LinkedBlockingQueue<Request> ReqQueue, ConcurrentHashMap<String, Client> Clients, Game game) {
         this.ReqQueue = ReqQueue;

@@ -8,9 +8,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class CommandParser {
+    private static Logger log = Logger.getLogger(Request.class.getName());
     private Client client;
     private SocketAddress Addr;
-    private static Logger log = Logger.getLogger(Request.class.getName());
+
     CommandParser(Client client, SocketAddress Addr) {
         this.Addr = Addr;
         this.client = client;
@@ -37,7 +38,7 @@ class CommandParser {
                 System.out.println(String.format("你说啥？要按套路出牌哦！您有%s个筹码，请下注：", client.Chips));
             }
         } else {
-            if (cmd.toLowerCase().equals("c")){
+            if (cmd.toLowerCase().equals("c")) {
                 return true;
             }
         }
@@ -62,7 +63,7 @@ class CommandParser {
             JSONObject res = req.Send(jsonMsg);
 
             if (res.getString("State").equals("Success")) {
-                client.IsJoin  = true;
+                client.IsJoin = true;
                 client.Chips -= num;
             } else {
                 log.info(res.getString("Msg"));

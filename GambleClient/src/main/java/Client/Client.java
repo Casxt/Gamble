@@ -12,13 +12,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class Client {
-    private AsynchronousSocketChannel ch;
-    private Reader reader = new Reader(this);
     public String Name;
     public String Token;
     public int Chips = 100;
     public boolean IsJoin = false;
     public boolean IsWorking = false;
+    private AsynchronousSocketChannel ch;
+    private Reader reader = new Reader(this);
 
     public Client(AsynchronousSocketChannel ch) {
         this.ch = ch;

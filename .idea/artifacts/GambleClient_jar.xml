@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="GambleClient:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/GambleClient_jar</output-path>
+    <root id="archive" name="GambleClient.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/GambleClient/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

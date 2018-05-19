@@ -8,8 +8,8 @@ import java.nio.channels.CompletionHandler;
 import java.util.concurrent.TimeUnit;
 
 public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
-    private Request req;
     ByteBuffer Buff = ByteBuffer.allocate(2048);
+    private Request req;
     private PackTool depacker = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
     private int readTimes = 0;
 

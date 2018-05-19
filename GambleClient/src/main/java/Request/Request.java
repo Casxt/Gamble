@@ -11,10 +11,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 public class Request {
+    private static Logger log = Logger.getLogger(Request.class.getName());
     private PackTool packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
     private SocketAddress address;
     private AsynchronousSocketChannel ch;
-    private static Logger log = Logger.getLogger(Request.class.getName());
 
     public Request(SocketAddress address) {
         this.address = address;

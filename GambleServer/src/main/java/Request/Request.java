@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class Request {
     public AsynchronousSocketChannel ch = null;
+    public JSONObject body = null;
     private LinkedBlockingQueue<Request> ReqQueue;
     private Reader reader = new Reader(this);
     private Writer writer = new Writer(this);
-    public JSONObject body = null;
 
     public Request(LinkedBlockingQueue<Request> ReqQueue) {
         this.ReqQueue = ReqQueue;

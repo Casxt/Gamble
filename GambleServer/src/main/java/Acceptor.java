@@ -1,4 +1,3 @@
-
 import Request.Request;
 
 import java.nio.channels.AsynchronousServerSocketChannel;
@@ -8,9 +7,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 public class Acceptor implements CompletionHandler<AsynchronousSocketChannel, Request> {
+    private static Logger log = Logger.getLogger(Acceptor.class.getName());
     private LinkedBlockingQueue<Request> ReqQueue;
     private AsynchronousServerSocketChannel Server;
-    private static Logger log = Logger.getLogger(Acceptor.class.getName());
 
     Acceptor(AsynchronousServerSocketChannel Server, LinkedBlockingQueue<Request> ReqQueue) {
         this.ReqQueue = ReqQueue;

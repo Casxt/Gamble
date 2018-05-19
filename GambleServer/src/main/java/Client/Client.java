@@ -9,14 +9,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Client {
     public String Name;
-    AsynchronousSocketChannel ch;
     public String Token;
+    public int Chips;
+    AsynchronousSocketChannel ch;
+    Reader reader;
     private ConcurrentHashMap<String, Client> Clients;
     private Writer writer;
-    Reader reader;
-    public int  Chips;
 
-    public Client(String Name, AsynchronousSocketChannel ch, ConcurrentHashMap<String, Client> Clients){
+    public Client(String Name, AsynchronousSocketChannel ch, ConcurrentHashMap<String, Client> Clients) {
         Chips = 100;
         UUID uuid = UUID.randomUUID();
         Token = uuid.toString();
@@ -29,6 +29,7 @@ public class Client {
 
     /**
      * Send A Msg to Client
+     *
      * @param Msg should be complete, It will be send directly
      * @return whether the msg write into the waiting buff
      */
@@ -39,7 +40,7 @@ public class Client {
     /**
      * Close will close the socket and remove itself from UserList
      */
-    public void Close(){
+    public void Close() {
         try {
             ch.close();
             Clients.remove(Name);

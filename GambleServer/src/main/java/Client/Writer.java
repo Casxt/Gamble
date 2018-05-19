@@ -10,9 +10,6 @@ import java.util.logging.Logger;
 
 public class Writer implements CompletionHandler<Integer, ByteBuffer> {
     private static Logger log = Logger.getLogger(Reader.class.getName());
-    private Client client;
-    private LinkedBlockingQueue<ByteBuffer> buffers;
-    private PackTool packer;
     /**
      * If KeepOpen is true, writer will not close the connection,
      * is was useful when there was a long connection,
@@ -20,6 +17,9 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      * The default value is false
      */
     boolean keepOpen = true;
+    private Client client;
+    private LinkedBlockingQueue<ByteBuffer> buffers;
+    private PackTool packer;
     /**
      * isSending control the process of sending data
      */

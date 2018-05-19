@@ -13,6 +13,7 @@ public class MsgHandle {
 
     /**
      * Parse Server Msg
+     *
      * @param data raw Server Msg
      */
     public void Parse(byte[] data) {
