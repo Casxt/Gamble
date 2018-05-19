@@ -13,10 +13,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Client {
     AsynchronousSocketChannel ch;
-    Reader reader;
-    String Name;
-    String Token;
-    int Chips;
+    public Reader reader;
+    public String Name;
+    public String Token;
+    public int Chips;
     public Client(AsynchronousSocketChannel ch) {
         this.ch = ch;
         reader = new Reader(this);

@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Scanner;
@@ -13,6 +14,7 @@ import java.util.concurrent.Future;
 public class GambleClient {
     static AsynchronousSocketChannel serverCh;
     static Client client;
+    static SocketAddress Addr = new InetSocketAddress("127.0.0.1",12345);
     private static CommandParser commandParser = new CommandParser();
     public static void main(String[] args) {
 
@@ -30,7 +32,7 @@ public class GambleClient {
         client.Start();
 
         System.out.println("您有100个筹码，请下注：");
-        
+
         Scanner sc = new Scanner(System.in);
 
         while (true){
@@ -42,7 +44,7 @@ public class GambleClient {
     public static void Connect(){
         try {
             serverCh = AsynchronousSocketChannel.open();
-            Future future = serverCh.connect(new InetSocketAddress("127.0.0.1",12345));
+            Future future = serverCh.connect(Addr);
             future.get();
         } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
