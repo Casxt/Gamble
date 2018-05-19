@@ -48,7 +48,7 @@ public class Client {
         }
     }
 
-    void KeepOpen(boolean keepOpen) {
+    public void KeepOpen(boolean keepOpen) {
         writer.keepOpen = keepOpen;
     }
 }

@@ -9,8 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class Writer implements CompletionHandler<Integer, ByteBuffer> {
-    private static String name = Reader.class.getName();
-    private static Logger log = Logger.getLogger(name);
+    private static Logger log = Logger.getLogger(Reader.class.getName());
     private Client client;
     private LinkedBlockingQueue<ByteBuffer> buffers;
     private PackTool packer;

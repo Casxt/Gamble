@@ -9,36 +9,37 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ConnectionRelay {
-    AsynchronousChannelGroup group;
-    AsynchronousServerSocketChannel Server;
+class ConnectionRelay {
+    private AsynchronousChannelGroup group;
     // LinkedBlockingQueue are Thread safe, see:
     // https://stackoverflow.com/questions/2695426/are-linkedblockingqueues-insert-and-remove-methods-thread-safe
     LinkedBlockingQueue<Request> ReqQueue;
     ConcurrentHashMap<String, Client> Clients;
-    Acceptor accepter;
+    private Acceptor acceptor;
+    AsynchronousServerSocketChannel server;
 
-
-
-    public ConnectionRelay() throws IOException {
+    ConnectionRelay() throws IOException {
         // more detail of ThreadPool please see
         // https://www.cnblogs.com/richaaaard/p/6599184.html
         // and
         // https://www.ibm.com/developerworks/cn/java/j-nio2-1/
         group = AsynchronousChannelGroup.withFixedThreadPool(2, Executors.defaultThreadFactory());
-        accepter = null;
+        acceptor = null;
         ReqQueue = new LinkedBlockingQueue<>();
         Clients = new ConcurrentHashMap<>();
-
-
     }
 
-    public void Sratr(String host, int port) throws IOException {
-        Server = AsynchronousServerSocketChannel.open(group);
-        Server.bind(new InetSocketAddress(host, port));
+    void Sratr(String host, int port) throws IOException {
+        server = AsynchronousServerSocketChannel.open(group);
+        server.bind(new InetSocketAddress(host, port));
 
-        accepter = new Acceptor(Server, ReqQueue);
-        Server.accept(new Request(ReqQueue), accepter);
+        acceptor = new Acceptor(server, ReqQueue);
+        server.accept(new Request(ReqQueue), acceptor);
+    }
+
+    void ShotdownNow() throws IOException {
+        server.close();
+        group.shutdownNow();
     }
 
 }

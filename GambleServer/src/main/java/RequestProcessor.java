@@ -6,12 +6,15 @@ import Game.Game;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 
 public class RequestProcessor implements Runnable {
     private LinkedBlockingQueue<Request> ReqQueue;
     private ConcurrentHashMap<String, Client> Clients;
     private MsgTool msgTool;
     private Game game;
+    Thread thread;
+    private static Logger log = Logger.getLogger(RequestProcessor.class.getName());
 
     RequestProcessor(LinkedBlockingQueue<Request> ReqQueue, ConcurrentHashMap<String, Client> Clients, Game game) {
         this.ReqQueue = ReqQueue;
@@ -44,13 +47,16 @@ public class RequestProcessor implements Runnable {
                 req.Response(res);
 
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //Stop Thread
+                log.info("RequestProcessor exit");
+                return;
+                //e.printStackTrace();
             }
         }
     }
 
     Thread Start() {
-        Thread thread = new Thread(this);
+        thread = new Thread(this);
         thread.start();
         return thread;
     }

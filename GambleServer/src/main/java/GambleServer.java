@@ -29,6 +29,10 @@ public class GambleServer {
 
             log.info("Server Starting......");
             gameThread.join();
+            server.ShotdownNow();
+            for (RequestProcessor requestProcessor : requestProcessors) {
+                requestProcessor.thread.interrupt();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
