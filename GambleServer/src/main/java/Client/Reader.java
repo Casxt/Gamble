@@ -5,11 +5,10 @@ import java.nio.channels.CompletionHandler;
 import java.util.logging.Logger;
 
 /**
- * Reader is mainly use to detect the err or client
+ * Reader is mainly use to detect the err of client
  */
 public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
-    private static String name = Reader.class.getName();
-    private static Logger log = Logger.getLogger(name);
+    private static Logger log = Logger.getLogger(Reader.class.getName());
     private Client client;
 
     Reader(Client client) {
@@ -30,12 +29,14 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
     @Override
     public void failed(Throwable e, AsynchronousSocketChannel ch) {
         if (e instanceof java.nio.channels.InterruptedByTimeoutException) {
-            client.Close();
-            log.info(String.format("client %s Timeout and closed", client.Name));
+            log.info(String.format("client %s Timeout interrupted and closed", client.Name));
+        } else if (e instanceof java.io.IOException){
+            //java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+            log.info(String.format("client %s remote closed", client.Name));
         } else {
             log.info("client closed");
-            client.Close();
             e.printStackTrace();
         }
+        client.Close();
     }
 }

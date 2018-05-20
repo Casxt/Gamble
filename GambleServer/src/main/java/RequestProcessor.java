@@ -55,10 +55,9 @@ public class RequestProcessor implements Runnable {
         }
     }
 
-    Thread Start() {
+    void Start() {
         thread = new Thread(this);
         thread.start();
-        return thread;
     }
 
     /**

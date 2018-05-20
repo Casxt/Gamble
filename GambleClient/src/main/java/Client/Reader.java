@@ -7,8 +7,10 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
+    private static Logger log = Logger.getLogger(Reader.class.getName());
     ByteBuffer Buff = ByteBuffer.allocate(2048);
     private Client client;
     private PackTool depacker = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
@@ -58,10 +60,13 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
         // if timeout
         if (e instanceof java.nio.channels.InterruptedByTimeoutException) {
             System.out.println("接收超时，断开与服务器的连接");
-            client.Quite();
+        } else if (e instanceof java.io.IOException){
+            //java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+            log.info("server remote closed");
         } else {
-            client.Quite();
+
             e.printStackTrace();
         }
+        client.Quite();
     }
 }

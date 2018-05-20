@@ -68,7 +68,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
                 if (sendTimes < 4) {
                     client.ch.write(buffer, 10, TimeUnit.SECONDS, buffer, this);
                 } else {//Already send too many times
-                    log.info(String.format("client %s Timeout and closed", client.Name));
+                    log.info(String.format("client %s too slow and closed", client.Name));
                     client.Close();
                 }
             } else {
@@ -90,12 +90,13 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
     @Override
     public void failed(Throwable e, ByteBuffer buffer) {
         if (e instanceof java.nio.channels.InterruptedByTimeoutException) {
-            client.Close();
-            log.info(String.format("client %s Timeout and closed", client.Name));
+            log.info(String.format("client %s Timeout Interrupted and closed", client.Name));
+        } else if (e instanceof java.io.IOException){
+            //java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+            log.info(String.format("client %s remote closed", client.Name));
         } else {
-            log.info("client closed");
-            client.Close();
             e.printStackTrace();
         }
+        client.Close();
     }
 }

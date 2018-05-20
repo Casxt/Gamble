@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public class Game implements Runnable {
     private static String name = Game.class.getName();
     private static Logger log = Logger.getLogger(name);
-    private static int serverChips = 0;
+    private static int serverChips = 5000;
     //private ConcurrentHashMap<String, Client> Clients;
     private ConcurrentHashMap<String, Gambler> Gamblers;
     private Random ran;
