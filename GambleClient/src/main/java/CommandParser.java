@@ -25,6 +25,10 @@ class CommandParser {
      */
     boolean Parse(String cmd) {
 
+        if (cmd.isEmpty()){
+            return false;
+        }
+
         if (client.IsWorking) {
             Matcher matcher = Pattern.compile("^(\\d+) ([D|X])$").matcher(cmd);
             if (matcher.find()) {
