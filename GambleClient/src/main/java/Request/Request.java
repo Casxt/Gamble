@@ -36,7 +36,7 @@ public class Request {
             log.info("Request Conn Failed");
         }
 
-        ByteBuffer buff = packer.DataConstructor(JsonMsg.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        ByteBuffer buff = packer.Construct(JsonMsg.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
         try {
             ch.write(buff).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -49,7 +49,7 @@ public class Request {
             ch.read(buff).get();
             ch.close();
             buff.flip();
-            byte[] data = packer.DataDeconstructor(buff);
+            byte[] data = packer.Deconstruct(buff);
 
             if (data == null) {
                 log.info("Request Send Failed");

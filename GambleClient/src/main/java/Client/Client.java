@@ -61,14 +61,14 @@ public class Client {
 
         try {
             PackTool packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
-            ByteBuffer buff = packer.DataConstructor(req.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            ByteBuffer buff = packer.Construct(req.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
             ch.write(buff).get();
 
             buff = ByteBuffer.allocate(2048);
             ch.read(buff).get();
             buff.flip();
 
-            byte[] data = packer.DataDeconstructor(buff);
+            byte[] data = packer.Deconstruct(buff);
             if (data == null) {
                 System.out.println("数据发送失败，请再次输入用户名：");
                 return false;

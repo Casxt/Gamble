@@ -16,11 +16,11 @@ public class PackTool {
         Reset();
     }
 
-    public void Reset() {
+    private void Reset() {
         count = 0;
     }
 
-    public boolean MatchHead(ByteBuffer buffer) {
+    private boolean MatchHead(ByteBuffer buffer) {
         //init the sum of count
         count = len - 1;
         //First fill the RingBuff
@@ -47,7 +47,7 @@ public class PackTool {
         return false;
     }
 
-    public byte[] DataDeconstructor(ByteBuffer buffer) {
+    public byte[] Deconstruct(ByteBuffer buffer) {
         if (MatchHead(buffer)) {
             //登记位置
             buffer.mark();
@@ -70,8 +70,7 @@ public class PackTool {
                 return null;
 
             } else {
-
-                //剩余数据不足
+                //找到包头，但数据体还不完整
                 //回溯位置
                 buffer.reset();
                 //回溯包头
@@ -87,12 +86,12 @@ public class PackTool {
     }
 
     /**
-     * DataConstructor will Constructor data struct
+     * Construct will Constructor data struct
      *
      * @param data is data wait to be pack
      * @return the buffer wait to be send
      */
-    public ByteBuffer DataConstructor(byte[] data) {
+    public ByteBuffer Construct(byte[] data) {
         //byte[] head = {'G','r','a','m','b','l','e'};
         CRC32 crc32 = new CRC32();
         crc32.update(data);
@@ -106,11 +105,13 @@ public class PackTool {
         return b;
     }
 
-    public ByteBuffer DataConstructor(ByteBuffer buffer) {
+    /* never used function
+    public ByteBuffer Construct(ByteBuffer buffer) {
         byte[] data = new byte[buffer.remaining()];
         buffer.get(data);
-        return DataConstructor(data);
+        return Construct(data);
     }
+    */
 
     private boolean isMatch() {
         for (int i = 0; i < len; i++) {

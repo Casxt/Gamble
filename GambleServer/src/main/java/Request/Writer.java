@@ -42,7 +42,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      */
     public void Send() {
         buffer.flip();
-        packer.DataConstructor(buffer);
+        packer.Construct(buffer);
         req.ch.write(buffer, buffer, this);
     }
 
@@ -55,7 +55,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      * @param data is the only data need to send
      */
     public void WriteOnce(byte[] data) {
-        ByteBuffer buffer = packer.DataConstructor(data);
+        ByteBuffer buffer = packer.Construct(data);
         req.ch.write(buffer, 10, TimeUnit.SECONDS, buffer, this);
     }
 

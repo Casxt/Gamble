@@ -67,7 +67,7 @@ public class Request {
     /**
      * Close the channel
      */
-    public void Close() {
+    void Close() {
         try {
             ch.close();
         } catch (IOException e) {

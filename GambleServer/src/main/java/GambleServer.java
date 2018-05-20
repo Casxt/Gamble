@@ -23,13 +23,13 @@ public class GambleServer {
                 requestProcessor.Start();
             }
 
-            server.Sratr("0.0.0.0", 12345);
+            server.Start("0.0.0.0", 12345);
 
             Thread gameThread = game.Start();
 
             log.info("Server Starting......");
             gameThread.join();
-            server.ShotdownNow();
+            server.ShutdownNow();
             for (RequestProcessor requestProcessor : requestProcessors) {
                 requestProcessor.thread.interrupt();
             }

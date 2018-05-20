@@ -29,7 +29,7 @@ class ConnectionRelay {
         Clients = new ConcurrentHashMap<>();
     }
 
-    void Sratr(String host, int port) throws IOException {
+    void Start(String host, int port) throws IOException {
         server = AsynchronousServerSocketChannel.open(group);
         server.bind(new InetSocketAddress(host, port));
 
@@ -37,7 +37,7 @@ class ConnectionRelay {
         server.accept(new Request(ReqQueue), acceptor);
     }
 
-    void ShotdownNow() throws IOException {
+    void ShutdownNow() throws IOException {
         server.close();
         group.shutdownNow();
     }

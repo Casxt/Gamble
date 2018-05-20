@@ -42,7 +42,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      * @param data waite to be send
      */
     boolean Write(byte[] data) {
-        boolean res = buffers.offer(packer.DataConstructor(data));
+        boolean res = buffers.offer(packer.Construct(data));
         if (!isSending && !buffers.isEmpty()) {
             continueSend();
         }

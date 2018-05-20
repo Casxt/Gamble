@@ -22,7 +22,7 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
         readTimes++;
         if (result != -1) {
             Buff.flip();
-            byte[] data = depacker.DataDeconstructor(Buff);
+            byte[] data = depacker.Deconstruct(Buff);
             Buff.compact();
             if (data != null) {
 

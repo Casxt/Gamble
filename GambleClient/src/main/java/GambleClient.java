@@ -42,11 +42,11 @@ public class GambleClient {
 
     }
 
-    private static AsynchronousSocketChannel Connect(SocketAddress Addr) {
+    private static AsynchronousSocketChannel Connect(SocketAddress address) {
         AsynchronousSocketChannel serverCh;
         try {
             serverCh = AsynchronousSocketChannel.open();
-            serverCh.connect(Addr).get();
+            serverCh.connect(address).get();
             return serverCh;
         } catch (IOException | InterruptedException | ExecutionException e) {
             //System.out.println(e.toString().endsWith("远程计算机拒绝网络连接。"));
