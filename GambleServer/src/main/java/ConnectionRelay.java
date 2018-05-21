@@ -14,7 +14,7 @@ class ConnectionRelay {
     // https://stackoverflow.com/questions/2695426/are-linkedblockingqueues-insert-and-remove-methods-thread-safe
     LinkedBlockingQueue<Request> ReqQueue;
     ConcurrentHashMap<String, Client> Clients;
-    AsynchronousServerSocketChannel server;
+    private AsynchronousServerSocketChannel server;
     private AsynchronousChannelGroup group;
     private Acceptor acceptor;
 

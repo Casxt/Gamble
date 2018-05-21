@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 public class GambleServer {
     private static String name = GambleServer.class.getName();
     private static Logger log = Logger.getLogger(name);
-    private static RequestProcessor[] requestProcessors;
 
     public static void main(String[] args) {
 
@@ -15,7 +14,7 @@ public class GambleServer {
 
             Game game = new Game(server.Clients);
 
-            requestProcessors = new RequestProcessor[1];
+            RequestProcessor[] requestProcessors = new RequestProcessor[1];
             for (int i = 0; i < requestProcessors.length; i++) {
                 requestProcessors[i] = new RequestProcessor(server.ReqQueue, server.Clients, game);
             }

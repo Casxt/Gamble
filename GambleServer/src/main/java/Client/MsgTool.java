@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MsgTool {
-    ConcurrentHashMap<String, Client> Clients;
+    private ConcurrentHashMap<String, Client> Clients;
 
     public MsgTool(ConcurrentHashMap<String, Client> Clients) {
         this.Clients = Clients;

@@ -26,7 +26,7 @@ public class Acceptor implements CompletionHandler<AsynchronousSocketChannel, Re
     public void failed(Throwable e, Request req) {
 
         if (e instanceof java.nio.channels.ClosedChannelException) {
-            log.severe("Server Stoped!");
+            log.severe("Server Stop!");
             e.getStackTrace();
         } else {
             log.severe(e.toString());

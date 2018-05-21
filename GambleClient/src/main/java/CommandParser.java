@@ -10,10 +10,10 @@ import java.util.regex.Pattern;
 class CommandParser {
     private static Logger log = Logger.getLogger(Request.class.getName());
     private Client client;
-    private SocketAddress Addr;
+    private SocketAddress address;
 
-    CommandParser(Client client, SocketAddress Addr) {
-        this.Addr = Addr;
+    CommandParser(Client client, SocketAddress address) {
+        this.address = address;
         this.client = client;
     }
 
@@ -25,7 +25,7 @@ class CommandParser {
      */
     boolean Parse(String cmd) {
 
-        if (cmd.isEmpty()){
+        if (cmd.isEmpty()) {
             return false;
         }
 
@@ -42,10 +42,8 @@ class CommandParser {
                 System.out.println(String.format("你说啥？要按套路出牌哦！您有%s个筹码，请下注：", client.Chips));
             }
         } else {
-            if (cmd.toLowerCase().equals("c")) {
-                return true;
-            }
-        }
+            return cmd.toLowerCase().equals("c");
+    }
         return false;
     }
 
@@ -58,7 +56,7 @@ class CommandParser {
      */
     private void JoinGamble(int num, boolean betType) {
         if (client.Chips >= num) {
-            Request req = new Request(Addr);
+            Request req = new Request(address);
 
             JSONObject jsonMsg = req.BaseObject("JoinGamble", client.Name, client.Token)
                     .put("SpendChips", num)

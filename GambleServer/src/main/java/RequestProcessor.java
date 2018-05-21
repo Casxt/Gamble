@@ -92,7 +92,7 @@ public class RequestProcessor implements Runnable {
      * {"Action":"JoinGamble",
      * "Name":"",
      * "SpendChips":Num,
-     * "BetType":bool, ture = big, false = small
+     * "BetType":bool, true = big, false = small
      * "Token":""}
      *
      * @param req should contain data above

@@ -48,7 +48,7 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
             }
 
         } else {
-            // TODO:Info Something
+            log.info("Client read -1 and quite");
             client.Quite();
         }
     }
