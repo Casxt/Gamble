@@ -16,7 +16,6 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
     boolean keepOpen = false;
     private int sendTimes = 0;
     private Request req;
-    private ByteBuffer buffer = ByteBuffer.allocate(2048);
     private PackTool packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
 
 

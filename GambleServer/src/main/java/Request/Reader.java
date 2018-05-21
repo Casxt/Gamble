@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class Reader implements CompletionHandler<Integer, AsynchronousSocketChannel> {
     ByteBuffer Buff = ByteBuffer.allocate(2048);
     private Request req;
-    private PackTool depacker = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
+    private PackTool parser = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
     private int readTimes = 0;
 
     Reader(Request req) {
@@ -22,7 +22,7 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
         readTimes++;
         if (result != -1) {
             Buff.flip();
-            byte[] data = depacker.Deconstruct(Buff);
+            byte[] data = parser.Deconstruct(Buff);
             Buff.compact();
             if (data != null) {
 

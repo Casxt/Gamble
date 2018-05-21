@@ -13,7 +13,7 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
     private static Logger log = Logger.getLogger(Reader.class.getName());
     ByteBuffer Buff = ByteBuffer.allocate(2048);
     private Client client;
-    private PackTool depacker = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
+    private PackTool parser = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
     private MsgHandle msgHandle;
 
     private int readTimes = 0;
@@ -29,7 +29,7 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
         if (result != -1) {
             Buff.flip();
 
-            byte[] data = depacker.Deconstruct(Buff);
+            byte[] data = parser.Deconstruct(Buff);
 
             Buff.compact();
             if (data != null) {
