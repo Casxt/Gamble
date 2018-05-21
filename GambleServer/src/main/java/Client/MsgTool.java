@@ -34,6 +34,12 @@ public class MsgTool {
         }
     }
 
+    /**
+     * Send Msg Except the specific user
+     *
+     * @param name    of specific user
+     * @param JsonMsg JSON Object need to send
+     */
     public void BroadcastExcept(String name, JSONObject JsonMsg) {
         for (Client client : Clients.values()) {
             if (!client.Name.equals(name)) {

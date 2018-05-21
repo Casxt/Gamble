@@ -49,6 +49,12 @@ public class Client {
         }
     }
 
+    /**
+     * if keepopen = true, the ch will not be closed after response send,
+     * otherwise the ch will be close, default is false.
+     *
+     * @param keepOpen is the flag of keepOpen
+     */
     public void KeepOpen(boolean keepOpen) {
         writer.keepOpen = keepOpen;
     }
