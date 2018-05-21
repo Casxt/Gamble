@@ -15,6 +15,14 @@ public class PackTool {
         ringBuf = new byte[len];
     }
 
+    /**
+     * Find the first Head in the buffer, if find return true
+     * pos of buf will be set to first byte behind head,
+     * so data can be get directly.
+     *
+     * @param buffer if the buffer wait to find the buffer
+     * @return true if found.
+     */
     private boolean MatchHead(ByteBuffer buffer) {
         //init the sum of count
         count = len - 1;
@@ -42,6 +50,15 @@ public class PackTool {
         return false;
     }
 
+    /**
+     * Deconstruct data in buff, data not used will rest in buff
+     * only one msg will be Deconstruct with one call
+     * it will test try to read out whole msg and check with crc
+     * if data in buff is not enough, will return null
+     *
+     * @param buffer wait to Deconstruct
+     * @return byte[] of data
+     */
     public byte[] Deconstruct(ByteBuffer buffer) {
         if (MatchHead(buffer)) {
 
@@ -112,6 +129,10 @@ public class PackTool {
     }
     */
 
+    /**
+     * test data in ring buffer, if it match head, return true
+     * @return true if match
+     */
     private boolean isMatch() {
         for (int i = 0; i < len; i++) {
             // the match will begin from the last byte and end with the first byte

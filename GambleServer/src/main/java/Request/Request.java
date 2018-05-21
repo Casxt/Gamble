@@ -19,10 +19,6 @@ public class Request {
 
     public Request(LinkedBlockingQueue<Request> ReqQueue) {
         this.ReqQueue = ReqQueue;
-        //ch = null;
-        //reader = new Reader(this);
-        //body = null;
-        //writer = new Writer(this);
     }
 
     public void Response(JSONObject res) {
