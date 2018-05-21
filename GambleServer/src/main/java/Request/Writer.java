@@ -14,7 +14,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      * The default value is false
      */
     boolean keepOpen = false;
-    int sendTimes = 0;
+    private int sendTimes = 0;
     private Request req;
     private ByteBuffer buffer = ByteBuffer.allocate(2048);
     private PackTool packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
@@ -26,26 +26,26 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
         //packer = new PackTool(new byte[]{'G', 'r', 'a', 'm', 'b', 'l', 'e'});
     }
 
-    /**
+    /*
      * Write Data into buffer, can be call more than once.
      * this method work with Send(),
      * And the Write-Send can not use with WriteOnce
      *
      * @param data waite to be send
-     */
+
     public void Write(byte[] data) {
         buffer.put(data);
     }
-
-    /**
-     * Send the data in buffer which written by Write()
      */
+    /*
+     * Send the data in buffer which written by Write()
+
     public void Send() {
         buffer.flip();
         packer.Construct(buffer);
         req.ch.write(buffer, buffer, this);
     }
-
+     */
 
     /**
      * WriteOnce the Data to buffer and send and close connection
@@ -54,7 +54,7 @@ public class Writer implements CompletionHandler<Integer, ByteBuffer> {
      *
      * @param data is the only data need to send
      */
-    public void WriteOnce(byte[] data) {
+    void WriteOnce(byte[] data) {
         ByteBuffer buffer = packer.Construct(data);
         req.ch.write(buffer, 10, TimeUnit.SECONDS, buffer, this);
     }
