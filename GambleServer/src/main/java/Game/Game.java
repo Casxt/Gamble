@@ -6,6 +6,7 @@ import Client.MsgTool;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 public class Game implements Runnable {
@@ -15,6 +16,7 @@ public class Game implements Runnable {
     private ConcurrentHashMap<String, Gambler> Gamblers;
     private Random ran;
     private MsgTool msgTool;
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     public Game(ConcurrentHashMap<String, Client> Clients) {
         Gamblers = new ConcurrentHashMap<>();
@@ -38,17 +40,27 @@ public class Game implements Runnable {
      * @return if already join, return false
      */
     public boolean Join(Client client, int chips, boolean betType) {
-        synchronized (Gamblers) {
-            if (!Gamblers.containsKey(client.Name)) {
-                Gamblers.put(name, new Gambler(client, chips, betType ? BetType.Big : BetType.Small));
-                return true;
-            } else return false;
+        // ConcurrentHashMap is thread safe,
+        // but need to avoid change during confirm gambler
+        lock.readLock().lock();
+        if (!Gamblers.containsKey(client.Name)) {
+
+            Gamblers.put(name, new Gambler(client, chips, betType ? BetType.Big : BetType.Small));
+
+            lock.readLock().unlock();
+            return true;
+        } else {
+
+            lock.readLock().unlock();
+            return false;
         }
+
     }
 
 
     @Override
     public void run() {
+        ConcurrentHashMap<String, Gambler> nowGamblers, temp;
         while (true) {
 
             log.info(String.format("庄家剩余点数%d", serverChips));
@@ -57,20 +69,23 @@ public class Game implements Runnable {
             // Delay
             try {
                 //See more detail at http://www.importnew.com/7219.html
-                TimeUnit.SECONDS.sleep(10);
+                TimeUnit.SECONDS.sleep(30);
             } catch (InterruptedException e) {
                 return;
             }
 
             msgTool.Broadcast("GambleStartNotify", "停止下注啦！都不要动啦！马上要开啦！开！开！开！。");
 
-            // 锁定本局参与者
-            ConcurrentHashMap<String, Gambler> nowGamblers;
-            synchronized (Gamblers) {
-                nowGamblers = Gamblers;
-                //TODO:先创建再直接赋值？
-                Gamblers = new ConcurrentHashMap<>();
-            }
+            // confirm gambler of this round of game, create Map outside lock, decrease the time of lock;
+            temp = new ConcurrentHashMap<>();
+
+            // Get Write Lock avoid Gamblers change during confirm gambler
+            lock.writeLock().lock();
+            // ptr exchange should be very fast
+            nowGamblers = Gamblers;
+            Gamblers = temp;
+
+            lock.writeLock().unlock();
 
             // About uniformly distributed see more about
             // https://stackoverflow.com/questions/20389890/generating-a-random-number-between-1-and-10-java
@@ -99,7 +114,7 @@ public class Game implements Runnable {
                     g.client.KeepOpen(false);
                     msgTool.Broadcast("GambleUserChipEmptyNotify", String.format("%s输个精光，被一脚踢出！", g.client.Name),
                             "Name", g.client.Name);
-
+                    break;
                 }
 
             }

@@ -6,18 +6,13 @@ import java.util.zip.CRC32;
 public class PackTool {
     private byte[] ringBuf;
     private byte[] head;
-    private int count;
+    private int count = 0;
     private int len;
 
     public PackTool(byte[] head) {
         len = head.length;
         this.head = head;
         ringBuf = new byte[len];
-        Reset();
-    }
-
-    private void Reset() {
-        count = 0;
     }
 
     private boolean MatchHead(ByteBuffer buffer) {
@@ -49,8 +44,11 @@ public class PackTool {
 
     public byte[] Deconstruct(ByteBuffer buffer) {
         if (MatchHead(buffer)) {
-            //登记位置
+
+            //mark the position of first byte behind Head
             buffer.mark();
+
+            //Gte Data Len
             int dataLen = buffer.getInt();
 
             //dataLen 的定义为不包含long int效验码的data部分的长度
@@ -69,11 +67,12 @@ public class PackTool {
 
                 return null;
 
-            } else {
-                //找到包头，但数据体还不完整
-                //回溯位置
+            } else {//Head has been found but data not receive completely
+
+                //return back to first byte
                 buffer.reset();
-                //回溯包头
+
+                //return back to pos of begin of head
                 buffer.position(buffer.position() - head.length);
                 return null;
             }

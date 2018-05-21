@@ -64,7 +64,6 @@ public class Reader implements CompletionHandler<Integer, AsynchronousSocketChan
             //java.io.IOException: 远程主机强迫关闭了一个现有的连接。
             log.info("server remote closed");
         } else {
-
             e.printStackTrace();
         }
         client.Quite();
