@@ -30,23 +30,43 @@ class CommandParser {
         }
 
         if (client.IsWorking) {
-            Matcher matcher = Pattern.compile("^(\\d+) ([D|X])$").matcher(cmd);
-            if (matcher.find()) {
 
-                if (!client.IsJoin) {
-                    JoinGamble(Integer.parseInt(matcher.group(1)), matcher.group(2).equals("D"));
-                } else {
-                    System.out.println("你已经参加了本轮游戏");
-                }
+            Matcher matcher = Pattern.compile("^(\\d+) ([D|X])$").matcher(cmd);
+            if (cmd.toLowerCase().equals("who")) {
+                ListUser();
+
+            } else if (matcher.find()) {
+
+                //if (!client.IsJoin) {
+                JoinGamble(Integer.parseInt(matcher.group(1)), matcher.group(2).equals("D"));
+                //} else {
+                //    System.out.println("你已经参加了本轮游戏");
+                //}
             } else {
                 System.out.println(String.format("你说啥？要按套路出牌哦！您有%s个筹码，请下注：", client.Chips));
             }
+
+
         } else {
             return cmd.toLowerCase().equals("c");
-    }
+        }
         return false;
     }
 
+
+    private void ListUser() {
+        Request req = new Request(address);
+        JSONObject jsonMsg = req.BaseObject("ListUser", client.Name, client.Token);
+
+        JSONObject res = req.Send(jsonMsg);
+
+        if (res.getString("State").equals("Success")) {
+            System.out.println(res.getString("Msg"));
+        } else {
+            log.info(res.getString("Msg"));
+        }
+
+    }
 
     /**
      * JoinGamble
@@ -66,9 +86,9 @@ class CommandParser {
 
             if (res.getString("State").equals("Success")) {
                 client.IsJoin = true;
-                client.Chips -= num;
+                //client.Chips -= num;
             } else {
-                log.info(res.getString("Msg"));
+                log.info(res.getString("您已重新下注"));
             }
 
         } else {

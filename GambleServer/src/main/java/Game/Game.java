@@ -51,6 +51,7 @@ public class Game implements Runnable {
             return true;
         } else {
 
+            Gamblers.put(name, new Gambler(client, chips, betType ? BetType.Big : BetType.Small));
             lock.readLock().unlock();
             return false;
         }

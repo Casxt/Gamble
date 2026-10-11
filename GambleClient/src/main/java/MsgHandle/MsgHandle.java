@@ -26,6 +26,9 @@ public class MsgHandle {
             case "GamblerJoinNotify":
                 GamblerJoinNotify(Msg);
                 break;
+            case "GamblerReJoinNotify":
+                GamblerReJoinNotify(Msg);
+                break;
             case "GamblePrepareNotify":
                 GamblePrepareNotify(Msg);
                 break;
@@ -53,6 +56,14 @@ public class MsgHandle {
     private void LoginNotify(JSONObject Msg) {
         System.out.println(String.format("玩家 %s 加入游戏", Msg.getString("Name")));
     }
+
+    private void GamblerReJoinNotify(JSONObject Msg) {
+        System.out.println(String.format("%s反悔啦，重新下注%s个，押%s！",
+                Msg.getString("Name").equals(client.Name) ? "你" : Msg.getString("Name"),
+                Msg.getInt("SpendChips"),
+                Msg.getBoolean("BetType") ? "大" : "小"));
+    }
+
 
     private void GamblerJoinNotify(JSONObject Msg) {
         System.out.println(String.format("%s下注%s个，押%s！",

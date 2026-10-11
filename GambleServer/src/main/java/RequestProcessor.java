@@ -37,6 +37,9 @@ public class RequestProcessor implements Runnable {
                     case "JoinGamble":
                         res = JoinGamble(req);
                         break;
+                    case "ListUser":
+                        res = ListUser(req);
+                        break;
                     default:
                         res = new JSONObject();
                         res.put("State", "Failed")
@@ -58,6 +61,20 @@ public class RequestProcessor implements Runnable {
     void Start() {
         thread = new Thread(this);
         thread.start();
+    }
+
+    private JSONObject ListUser(Request req){
+        JSONObject res = new JSONObject();
+
+        StringBuffer msg = new StringBuffer(String.format("NUM:%s \r\n", Clients.size()));
+        for (Client c:Clients.values()){
+            msg.append(String.format("%s \r\n",c.Name));
+        }
+        res.put("State", "Success")
+                .put("Msg", msg.toString());
+        log.info(msg.toString());
+
+        return res;
     }
 
     /**
@@ -134,6 +151,14 @@ public class RequestProcessor implements Runnable {
                                 .put("Msg", "You Join the Game!")
                                 .put("Chips", c.Chips);
                     } else {
+                        JSONObject jsonMsg = new JSONObject();
+                        jsonMsg.put("Action", "GamblerReJoinNotify")
+                                .put("Msg", String.format("%s rejoin Gamble", c.Name))
+                                .put("Name", c.Name)
+                                .put("SpendChips", SpendChips)
+                                .put("BetType", reqData.getBoolean("BetType"));
+                        msgTool.Broadcast(jsonMsg);
+
                         res.put("State", "Failed")
                                 .put("Msg", "Already Joined")
                                 .put("Chips", c.Chips);
